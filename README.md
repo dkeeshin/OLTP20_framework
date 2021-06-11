@@ -39,39 +39,46 @@ First I create a local postgresql database and schema to store messages.  Starti
 
 $ sudo -u postgres psql -p 5432 
 
-Then run https://github.com/dkeeshin/OLTP20_framework/blob/postgresql/0001create_oltp20_framework.sql
+Then run https://github.com/dkeeshin/OLTP20_framework/blob/main/postgreSQL/0001create_oltp20_framework.sql
 from the postgres command line:
 
 		postgres=# \i /Documents\0001create_oltp20_framework.sql
 
-If all is ok,  the above command will create a database called oltp20_framework.  And connect you to it.
-Next run this script https://github.com/dkeeshin/OLTP20_framework/blob/postgresql/0002create_outgoing.sql using the command:
+If all is ok, the above command will create a database called oltp20_framework.  And connect you to it.
+Next run this script https://github.com/dkeeshin/OLTP20_framework/blob/main/postgreSQL/0002create_outgoing.sql using the command:
 
 		oltp20_framework=# \i 0002create_outgoing.sql
 
-Here I create a trigger on the message.outgoing table. This trigger fires off a notification.  I am using postgreSQL LISTEN and NOTIFY feature to do this.
+Here I create a trigger on the message.outgoing table. This trigger fires off a notification.  I am using postgreSQL LISTEN and NOTIFY features to do this.
 
-Meanwhile, I need the local GO code listening for the notification from postgreSQL. So run this:
+Meanwhile, I need the local GO code listening for the notification from postgreSQL. First, make sure this GO code is in place:
 
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/postgresql/01_message_client.png)
+https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/main.go
 
+GO can be finicky about where it runs from.  I model the GO code here on the "HelloWorld" examples in https://grpc.io/docs/languages/go/quickstart/
+Follow the instructions in the quickstart and you'll end up with directory like 
+
+/grpc-go/examples/helloworld
+
+I would recommend creating directory  called message_client in helloworld and put the main.go above in it.  Similarily,  I would do the same for GO code for the gRPC server 
+
+https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go
+
+Once the GO code is in place you'll need to start up the listeners.  First run this:
+
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/01_message_client.png)
+
+Followed by:
+
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/02_message_server.png)
 
 Once the GO code receives a message from postgreSQL,  I want it to send a message over gRPC to a remote connection.  Before I can do that I need to start up the remote connection:
 
-
-
-
-
-
-
-
-
-
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/01_message_client.png)
 
 GO code sends message over gRPC to a remote server.  
 
 Current tools of choice:  Linux, PostgreSQL, GO(GOlang) and gRPC.
-
 
 Software Used
 
@@ -81,24 +88,6 @@ https://golang.org/doc/install
 https://grpc.io/docs/languages/go/quickstart/
 https://code.visualstudio.com/
 
-Steps:
-
-1. Create database and schemas. 
-Postgresql/0001
-
-2. Create table, trigger, and trigger function. 
-Postgresql/0002
-
-3. In Linux,  open a terminal, start client listener
- 
-4. Open a second terminal window.   Start server listener.  
-
-grpc-go/examples/helloworld/message_client/main.go
-grpc-go/examples/helloworld/message_server/main.go
-
-5. Open a third terminal and insert message into message.outgoing table in postgres13.
-
-Postgresql/0003
 insert into message.outgoing (type, date, payload) values ('greeting', '2021-06-10', 'Ah-Ha!');
 
 
