@@ -35,22 +35,40 @@ Use Cases
 
 Here is an example of using a database transaction as an asynchronous message. The message is sent over a gRPC connection to a remote database node.
 
-I am using postgresql 13.   First I create a local database and schemas to store a message.
+First I create a local postgresql database and schema to store messages.  Startin Linux by firing up postgres:
+
+$ sudo -u postgres psql -p 5432 
+
+Then run https://github.com/dkeeshin/OLTP20_framework/blob/postgresql/0001create_oltp20_framework.sql
+from the postgres command line:
+
+		postgres=# \i /Documents\0001create_oltp20_framework.sql
+
+If all is ok,  the above command will create a database called oltp20_framework.  And connect you to it.
+Next run this script https://github.com/dkeeshin/OLTP20_framework/blob/postgresql/0002create_outgoing.sql using the command:
+
+		oltp20_framework=# \i 0002create_outgoing.sql
+
+Here I create a trigger on the message.outgoing table. This trigger fires off a notification.  I am using postgreSQL LISTEN and NOTIFY feature to do this.
+
+Meanwhile, I need the local GO code listening for the notification from postgreSQL. So run this:
+
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/postgresql/01_message_client.png)
 
 
-CREATE DATABASE oltp20_framework
-    WITH 
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    LC_COLLATE = 'en_US.UTF-8'
-    LC_CTYPE = 'en_US.UTF-8'
-    TABLESPACE = pg_default
-    CONNECTION LIMIT = -1;
+Once the GO code receives a message from postgreSQL,  I want it to send a message over gRPC to a remote connection.  Before I can do that I need to start up the remote connection:
 
-CREATE SCHEMA message;
 
-Trigger on message.outgoing table fires off notification to GO code that is listening for it.
-GO code sends PostgreSQL message over gRPC to server
+
+
+
+
+
+
+
+
+
+GO code sends message over gRPC to a remote server.  
 
 Current tools of choice:  Linux, PostgreSQL, GO(GOlang) and gRPC.
 
