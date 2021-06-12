@@ -75,9 +75,9 @@ Meanwhile, start the local GO code that "listens" for the notifications from pos
 
 *NOTE: GO can be finicky about where it runs from.  I modeled the GO code here on the "HelloWorld" examples in https://grpc.io/docs/languages/go/quickstart/ follow the instructions in the quickstart and you'll end up with directory like*
 
-/grpc-go/examples/helloworld
+		/grpc-go/examples/helloworld
 
-*I would recommend creating a directory named message_client in helloworld and put the main.go above in it.  Similarily,  I would do the same for GO code for the gRPC server *
+I would recommend creating a directory named message_client in helloworld and put the main.go above in it.  Similarily,  I would do the same for GO code for the gRPC server 
 
 *https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go*
 
