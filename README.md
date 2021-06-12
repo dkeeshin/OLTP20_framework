@@ -28,17 +28,17 @@ Keep data sets small and immutable.   AKA ‘inserts only”.  (yes, it could be
 
 Make it easy to understand, use, maintain, and customize.  
 
-__USE__CASES__
+**USE CASES**
 
 1.	Trading Systems 
 2.	Payments
 3.	Data Vaults 
 
-__CODE__SAMPLE__
+**CODE SAMPLE**
 
 The following is an example of using a database transaction as an asynchronous message. The message is sent over a gRPC connection to a remote database node.
 
-__CURRE__TOOLS__OF__CHOICE__
+**TOOLS OF CHOICE**
 
 Linux, PostgreSQL, GO(GOlang) and gRPC.
 
@@ -54,7 +54,7 @@ https://grpc.io/docs/languages/go/quickstart/
 
 https://code.visualstudio.com/
 
-__SET__UP__
+**SET UP**
 
 Step one is to create a local postgresql database and schema to store messages.  In Linux, 
 
