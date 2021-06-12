@@ -101,7 +101,7 @@ Create a third terminal window, start postgreSQL and execute this:
 
 		insert into message.outgoing (type, date, payload) values ('greeting', '2021-06-10', 'Ah-Ha!');
 
-You should now be able to see the inserted data, the data sent as message from the client, and the message received by the server:
+You should now be able to see the inserted data, the data sent as a message from the client, and the message received by the server:
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/04_message_sent.png)
 
