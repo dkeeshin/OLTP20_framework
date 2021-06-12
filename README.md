@@ -100,7 +100,7 @@ For a remote connection, create a new terminal window and run:
 
 Create a third terminal window, start postgreSQL and execute this:
 
-		insert into message.outgoing (type, date, payload) values ('greeting', '2021-06-10', 'Ah-Ha!');
+		insert into message.outgoing (type, date, payload) values ('message_test', '2021-06-10', 'Ah-Ha!');
 
 You should now be able to see the inserted data, the data sent as a message from the client, and the message received by the server:
 
