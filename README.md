@@ -79,7 +79,7 @@ Meanwhile, start the local GO code that "listens" for the notifications from pos
 
 I would recommend creating a directory named message_client in helloworld and put the main.go above in it.  Similarily,  I would do the same for GO code for the gRPC server 
 
-*https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go*
+		https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go
 
 *If there are issues,  be sure to check the linux path command.*
 
