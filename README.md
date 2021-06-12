@@ -28,45 +28,48 @@ Keep data sets small and immutable.   AKA ‘inserts only”.  (yes, it could be
 
 Make it easy to understand, use, maintain, and customize.  
 
-__USE CASES__
+__USE__CASES__
 
 1.	Trading Systems 
 2.	Payments
 3.	Data Vaults 
 
-__CODE SAMPLE__
+__CODE__SAMPLE__
 
 The following is an example of using a database transaction as an asynchronous message. The message is sent over a gRPC connection to a remote database node.
 
-__CURRENT TOOLS OF CHOICE__
+__CURRE__TOOLS__OF__CHOICE__
 
 Linux, PostgreSQL, GO(GOlang) and gRPC.
 
-For information and instruction on how to install these software tools, see:
+For information and instruction on how to install these components, see:
 
 https://linuxmint.com/
+
 https://www.postgresql.org/
+
 https://golang.org/doc/install
+
 https://grpc.io/docs/languages/go/quickstart/
+
 https://code.visualstudio.com/
 
-__SET UP__
+__SET__UP__
 
-First create a local postgresql database and schema to store messages.  In Linux, 
+Step one is to create a local postgresql database and schema to store messages.  In Linux, 
 
 $ sudo -u postgres psql -p 5432 
 
-Once postgreSQL is running, run https://github.com/dkeeshin/OLTP20_framework/blob/main/postgreSQL/0001create_oltp20_framework.sql
-from the postgres command line:
+From the postgres command line, run https://github.com/dkeeshin/OLTP20_framework/blob/main/postgreSQL/0001create_oltp20_framework.sql
 
 		postgres=# \i /Documents\0001create_oltp20_framework.sql
 
-If all is ok, the above script creates a database called oltp20_framework.  And connects to it. 
-Next run script https://github.com/dkeeshin/OLTP20_framework/blob/main/postgreSQL/0002create_outgoing.sql using this command:
+The above script creates a database called __oltp20_framework__.  And connects to it. 
+Next run  https://github.com/dkeeshin/OLTP20_framework/blob/main/postgreSQL/0002create_outgoing.sql using this command:
 
 		oltp20_framework=# \i 0002create_outgoing.sql
 
-This script contains a trigger on the message.outgoing table. This trigger fires off a notification using postgreSQL' LISTEN and NOTIFY feature.
+This script contains a trigger on the __message.outgoing__ table. This trigger fires off a notification using postgreSQL' LISTEN and NOTIFY feature.
 
 Meanwhile, start the local GO code that "listens" for the notifications from postgreSQL. First, make sure this GO code is in place:
 
