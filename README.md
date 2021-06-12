@@ -2,13 +2,13 @@ __OLTP 2.0 Framework Idea__
 __2021-06-10__
 
 __DESCRIPTION__
-The following is a conceptual design and preliminary a proof of concept code sample. 
+The following is a conceptual design and a preliminary proof of concept code sample. 
 
-__CONCEPT__:
+__CONCEPT__
 
 Using best of breed, open-source components, design a framework for building an open source, peer-to-peer OLTP “data network”.
 
-__APPROACH__:
+__APPROACH__
 
 A “Database Everywhere” approach with each node having its' own database.
 
@@ -36,7 +36,7 @@ Make it easy to understand, use, maintain, and customize.
 
 The following is an example of using a database transaction as an asynchronous message. The message is sent over a gRPC connection to a remote database node.
 
-**TOOLS OF CHOICE**
+**COMPONENTS**
 
 Linux, PostgreSQL, GO(GOlang) and gRPC.
 
@@ -54,7 +54,7 @@ https://code.visualstudio.com/
 
 **SET UP**
 
-Step one is to create a local postgresql database and schema to store messages.  In Linux, 
+Step one is to create a local postgresql database and schema to store messages. In Linux, 
 
 		$ sudo -u postgres psql -p 5432 
 
@@ -73,14 +73,13 @@ Meanwhile, start the local GO code that "listens" for the notifications from pos
 
 		https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/main.go
 
-*NOTE: GO can be finicky about where it runs from.  I modeled the GO code here on the "HelloWorld" examples in https://grpc.io/docs/languages/go/quickstart/*
-*Follow the instructions in the quickstart and you'll end up with directory like *
+*NOTE: GO can be finicky about where it runs from.  I modeled the GO code here on the "HelloWorld" examples in https://grpc.io/docs/languages/go/quickstart/ follow the instructions in the quickstart and you'll end up with directory like 
 
-*/grpc-go/examples/helloworld*
+/grpc-go/examples/helloworld
 
 *I would recommend creating a directory named message_client in helloworld and put the main.go above in it.  Similarily,  I would do the same for GO code for the gRPC server *
 
-*https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go
+*https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go*
 
 *If there are issues,  be sure to check the linux path command.*
 
@@ -104,7 +103,7 @@ Create a third terminal window, start postgreSQL and execute this:
 
 You should now be able to see the database command, the client message sent to the server:
 
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/04_message_sent.png)
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/04_message_sent.png)
 
 To be continued...
 
