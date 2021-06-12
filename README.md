@@ -2,6 +2,7 @@ __OLTP 2.0 Framework__
 __2021-06-10__
 
 __DESCRIPTION__
+
 The following is a conceptual design and a preliminary proof of concept code sample. 
 
 __CONCEPT__
@@ -77,7 +78,7 @@ Meanwhile, start the local GO code that "listens" for the notifications from pos
 
 		/grpc-go/examples/helloworld
 
-I would recommend creating a directory named message_client in helloworld and put the main.go above in it.  Similarily,  I would do the same for GO code for the gRPC server 
+I would recommend creating a directory named *message_client* in helloworld and put the main.go above in it.  Similarily,  I would create a *message_server* directory for gRPC server GO code 
 
 		https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go
 
