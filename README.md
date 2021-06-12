@@ -8,13 +8,11 @@ __CONCEPT__:
 
 Using best of breed, open-source components, design a framework for building an open source, peer-to-peer OLTP “data network”.
 
-__REQUIREMENTS__:
+__APPROACH__:
 
-A “Database Everywhere” Approach.
+A “Database Everywhere” approach with each node having its' own database.
 
 A data-event-driven, permissioned network of databases for near real time use.
-
-Each node has its' own database.
 
 Treat each database transaction as an asynchronous message. 
 
@@ -22,9 +20,9 @@ Achieve reasonable and eventual data consistency.
 
 Factor distances and speeds between nodes into the design.  
 
-Use a regional ‘hub’ approach to balance performance, security, and monitoring.
+Use a regional ‘hub’ to balance performance, security, and monitoring.
  
-Keep data sets small and immutable.   AKA ‘inserts only”.  (yes, it could be b-chain like)
+Keep data sets small and immutable. AKA ‘inserts only”.  (yes, it could be b-chain like)
 
 Make it easy to understand, use, maintain, and customize.  
 
@@ -75,12 +73,12 @@ Meanwhile, start the local GO code that "listens" for the notifications from pos
 
 		https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/main.go
 
-*NOTE: GO can be finicky about where it runs from.  I modeled the GO code here on the "HelloWorld" examples in https://grpc.io/docs/languages/go/quickstart/
-*Follow the instructions in the quickstart and you'll end up with directory like 
+*NOTE: GO can be finicky about where it runs from.  I modeled the GO code here on the "HelloWorld" examples in https://grpc.io/docs/languages/go/quickstart/*
+*Follow the instructions in the quickstart and you'll end up with directory like *
 
-*/grpc-go/examples/helloworld
+*/grpc-go/examples/helloworld*
 
-*I would recommend creating directory  called message_client in helloworld and put the main.go above in it.  Similarily,  I would do the same for GO code for the gRPC server 
+*I would recommend creating a directory named message_client in helloworld and put the main.go above in it.  Similarily,  I would do the same for GO code for the gRPC server *
 
 *https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go
 
@@ -92,20 +90,23 @@ Once the GO code is in place start up the listener. Execute:
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/01_message_client.png)
 
-Create a new terminal window and run:
+For a remote connection, create a new terminal window and run:
 
-	go run message_server/main.go
+		go run message_server/main.go
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/02_message_server.png)
 
-Once the GO code receives a message from postgreSQL,  I send it as a message over gRPC to a remote connection.  Before I can do that I need to start up the remote connection:
+**TESTING**
 
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/01_message_client.png)
+Create a third terminal window, start postgreSQL and execute this:
 
-GO code sends message over gRPC to a remote server.  
+		insert into message.outgoing (type, date, payload) values ('greeting', '2021-06-10', 'Ah-Ha!');
 
-insert into message.outgoing (type, date, payload) values ('greeting', '2021-06-10', 'Ah-Ha!');
+You should now be able to see the database command, the client message sent to the server:
 
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/04_message_sent.png)
+
+To be continued...
 
 
 
