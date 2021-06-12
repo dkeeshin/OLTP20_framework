@@ -67,7 +67,7 @@ Next run  https://github.com/dkeeshin/OLTP20_framework/blob/main/postgreSQL/0002
 
 		oltp20_framework=# \i 0002create_outgoing.sql
 
-This script contains a trigger on the __message.outgoing__ table. This trigger fires off a notification using postgreSQLs' LISTEN and NOTIFY feature.
+This script contains a trigger on the __message.outgoing__ table. This trigger fires off a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) feature.
 
 Meanwhile, start the local GO code that "listens" for the notifications from postgreSQL. First, make sure this GO code is in place:
 
