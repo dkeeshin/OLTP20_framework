@@ -11,7 +11,7 @@ Using best of breed, open-source components, design a framework for building an 
 
 __APPROACH__
 
-A “database everywhere” approach with each node having its' own database.
+A “database everywhere” approach with each peer having its' own database.
 
 A data-event-driven, permissioned network of databases for near real time use.
 
