@@ -11,7 +11,7 @@ Using best of breed, open-source components, design a framework for building an 
 
 __APPROACH__
 
-A “Database Everywhere” approach with each node having its' own database.
+A “database everywhere” approach with each node having its' own database.
 
 A data-event-driven, permissioned network of databases for near real time use.
 
@@ -23,7 +23,7 @@ Factor distances and speeds between nodes into the design.
 
 Use a regional ‘hub’ to balance performance, security, and monitoring.
  
-Keep data sets small and immutable. AKA ‘inserts only”.  (yes, it could be b-chain like)
+Keep data sets small and immutable. AKA 'inserts only'.  (yes, it could be b-chain like)
 
 Make it easy to understand, use, maintain, and customize.  
 
