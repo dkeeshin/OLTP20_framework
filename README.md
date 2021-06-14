@@ -33,6 +33,8 @@ Make it easy to understand, use, maintain, and customize.
 2.	Payments
 3.	Data Vaults 
 
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/OLTP20Preliminary20210614.png)
+
 **CODE SAMPLE**
 
 The following is an example of using a database transaction as an asynchronous message. The message is sent over a gRPC connection to a remote database node.
