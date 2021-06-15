@@ -7,7 +7,7 @@ The following is a conceptual design and a preliminary proof of concept code sam
 
 __CONCEPT__
 
-Using best of breed, open-source components, design a framework for building an open source, peer-to-peer OLTP “data network”.
+Using best of breed, open-source components, design a framework for building an open source, peer-to-peer OLTP “database network”.
 
 __APPROACH__
 
