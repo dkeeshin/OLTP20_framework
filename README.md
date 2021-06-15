@@ -19,7 +19,7 @@ Treat each database transaction as an asynchronous message.
 
 Achieve reasonable and eventual data consistency.
 
-Factor distances and speeds between nodes into the design.  
+Factor distances and speeds between peers into the design.  
 
 Use a regional ‘hub’ to balance performance, security, and monitoring.
  
@@ -30,7 +30,7 @@ Make it easy to understand, use, maintain, and customize.
 **USE CASES**
 
 1.	Trading Systems 
-2.	Payments
+2.	E-Commerce & Payments
 3.	Data Vaults 
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/OLTP20Preliminary20210614.png)
