@@ -29,9 +29,7 @@ Make it easy to understand, use, maintain, and customize.
 
 **USE CASES**
 
-1.	Trading Systems 
-2.	B2B E-Commerce & Payments
-3.	Data Vaults 
+Anything that needs near real time high-performance, data management like trading systems, B2B E-Commerce, payments, blockchains, data vaults, etc. 
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/OLTP20Preliminary20210614.png)
 
