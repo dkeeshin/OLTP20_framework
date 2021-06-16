@@ -63,7 +63,7 @@ From the postgres command line, run https://github.com/dkeeshin/OLTP20_framework
 
 		postgres=# \i /Documents\0001create_oltp20_framework.sql
 
-The above script creates a database called __oltp20_framework__.  And connects to it. 
+The above script creates a database called __oltp20_framework__ and connects to it. 
 Next run  https://github.com/dkeeshin/OLTP20_framework/blob/main/postgreSQL/0002create_outgoing.sql using this command:
 
 		oltp20_framework=# \i 0002create_outgoing.sql
