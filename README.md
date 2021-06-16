@@ -7,7 +7,7 @@ The following is a conceptual design and a preliminary proof of concept code sam
 
 __CONCEPT__
 
-Using best of breed, open-source components, design a framework for building an open source, peer-to-peer OLTP “database network”.
+Using best of breed, open-source components, design a framework for building an open source, peer-to-peer OLTP “network of databases”.
 
 __APPROACH__
 
@@ -30,7 +30,7 @@ Make it easy to understand, use, maintain, and customize.
 **USE CASES**
 
 1.	Trading Systems 
-2.	E-Commerce & Payments
+2.	B2B E-Commerce & Payments
 3.	Data Vaults 
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/OLTP20Preliminary20210614.png)
