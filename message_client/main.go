@@ -66,7 +66,7 @@ func grpc_connect(message string) {
 
 func main() {
 
-	var conninfo string = "dbname=oltp20_framework host=localhost user=postgres port=5433 password=6765!linuX"
+	var conninfo string = "dbname=oltp20_framework host=localhost user=postgres port=5432 password=password_goes_here"
 	conn, err := pgx.Connect(context.Background(), conninfo)
 
 	if err != nil {
