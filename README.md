@@ -70,7 +70,7 @@ Next run  https://github.com/dkeeshin/OLTP20_framework/blob/main/postgreSQL/0002
 
 This script contains a trigger on the __message.outgoing__ table. This trigger fires off a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) feature.
 
-Meanwhile, start the local GO code that "listens" for the notifications from postgreSQL. First, make sure this GO code is in place:
+Meanwhile, start the local GO code that "listens" for the notifications from postgreSQL. First, make sure [this GO code](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/main.go) is in place:
 
 		https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/main.go
 
@@ -78,7 +78,7 @@ Meanwhile, start the local GO code that "listens" for the notifications from pos
 
 		/grpc-go/examples/helloworld
 
-I would recommend creating a directory named *message_client* in helloworld and put the main.go above in it.  Similarily,  I would create a *message_server* directory for gRPC server GO code 
+I would recommend creating a directory named *message_client* in helloworld and put the main.go above in it.  Similarily,  I would create a *message_server* directory [for this gRPC server GO code](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go).
 
 		https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go
 
