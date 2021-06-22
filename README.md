@@ -81,6 +81,10 @@ The above script creates a database called __oltp20_framework__ and connects to 
 
 This script creates the __message.outgoing__ table and adds a trigger called __message_notify_event__ to it. On a message insert to the table, this trigger fires off a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) feature.
 
+To exit out of postgreSQL and return to the linux command line prompt, type:
+
+        oltp20_framework=# \q
+
 __GO__
 
 Assuming you have GO installed, change to the OLTP20_framework directory and run this
