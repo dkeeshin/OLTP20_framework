@@ -21,7 +21,7 @@ Achieve reasonable and eventual data consistency.
 
 Factor distances and speeds between peers into the design.  
 
-Use a regional ‘hub’ to balance performance, security, and monitoring.
+Use regional hubs to balance performance, security, and monitoring.
  
 Borrow from the blockchain, make tranasctions immutable, AKA 'inserts only'.
 
