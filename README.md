@@ -63,7 +63,7 @@ Start by cloning the git hub repository.  Assuming you have git installed, chang
 
         git clone https://github.com/dkeeshin/OLTP20_framework.git
 
-You will end up with a OLTP20_framework and give you a local version of the scripts for running this demo.
+This will create a OLTP20_framework directory and a local version of the scripts for running this demo.
 
 __PostgreSQL__
 
