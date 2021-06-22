@@ -105,7 +105,7 @@ Next run the local GO code that "listens" for the notifications from postgreSQL.
 
 For a simulated remote connection, create a new terminal window and run:
 
-		go run message_server/main.go
+        go run message_server/main.go
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/02_message_server.png)
 
@@ -113,7 +113,7 @@ For a simulated remote connection, create a new terminal window and run:
 
 Create a third terminal window, start postgreSQL and execute this:
 
-		insert into message.outgoing (type, date, payload) values ('message_test', '2021-06-10', 'Ah-Ha!');
+        insert into message.outgoing (type, date, payload) values ('message_test', '2021-06-10', 'Ah-Ha!');
 
 You should now be able to see the inserted data, the data sent as a message from the client, and the message received by the server:
 
