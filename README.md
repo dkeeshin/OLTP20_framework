@@ -1,5 +1,5 @@
 __OLTP 2.0 Framework__
-__2021-06-10__
+__2021-06-21__
 
 __DESCRIPTION__
 
@@ -88,7 +88,7 @@ To exit out of postgreSQL and return to the linux command line prompt, type:
 __GO__
 
 Assuming you have GO installed, change to the OLTP20_framework directory and run this
-
+      
         export PATH=$PATH:/usr/local/go/bin
 
 This will make sure there is a path to the GO program files.
@@ -98,7 +98,7 @@ Next you will need to edit the postgreSQL password and if necessary port number 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/07_client_main_go.png)
 
 Next run the local GO code that "listens" for the notifications from postgreSQL. Change to the OLTP20_framework directory and run:
-
+        
         go run message_client/main.go
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/01_message_client.png)
