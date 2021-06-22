@@ -57,13 +57,13 @@ https://code.visualstudio.com/
 
 **SET UP**
 
-GIT
+__GIT__
 
 The easiset way to start is to clone the git hub repository.  Assuming you have git installed, in linux, change to your home directory and run:
 
 git clone https://github.com/dkeeshin/OLTP20_framework.git
 
-You will end up with a OLTP20_framework and give you a local version of the scripts for running the proof of concept.
+You will end up with a OLTP20_framework and give you a local version of the scripts for running this demo.
 
 PostgreSQL
 
@@ -81,7 +81,7 @@ The above script creates a database called __oltp20_framework__ and connects to 
 
 This script contains a trigger on the __message.outgoing__ table. This trigger fires off a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) feature.
 
-GO
+__GO__
 
 Assuming you have GO installed, change to the OLTP20_framework directory and run this
 
@@ -89,7 +89,7 @@ Assuming you have GO installed, change to the OLTP20_framework directory and run
 
 This will make sure there is a path to the GO program files.
 
-Next you will need to edit postgreSQL password and if necessary port number in main.go in OLTP20_framework/message_client directory  You can use a text editor or Visual Studio code.  
+Next you will need to edit postgreSQL password and if necessary port number in main.go in OLTP20_framework/message_client directory. You can use a text editor or Visual Studio code.  
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/07_client_main_go.png)
 
