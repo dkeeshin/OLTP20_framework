@@ -23,7 +23,7 @@ Factor distances and speeds between peers into the design.
 
 Use a regional ‘hub’ to balance performance, security, and monitoring.
  
-Keep data sets small and immutable. AKA 'inserts only'.  (yes, it could be b-chain like)
+Borrow from the blockchain, make tranasctions immutable, AKA 'inserts only'.
 
 Make it easy to understand, use, maintain, and customize.  
 
