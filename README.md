@@ -3,7 +3,7 @@ __2021-06-10__
 
 __DESCRIPTION__
 
-The following is a conceptual design and a preliminary proof of concept code sample. 
+The following is a conceptual design and a preliminary proof of concept code demp. 
 
 __CONCEPT__
 
@@ -35,7 +35,7 @@ Anything that needs near real time high-performance, data management like tradin
 
 **CODE SAMPLE**
 
-The following is an example of using a database transaction as an asynchronous message. The message is sent over a gRPC connection to a remote database node.
+The following is an example of using a database transaction as an asynchronous message. The message is sent over a gRPC connection to a remote database node or peer.
 
 **COMPONENTS**
 
@@ -59,7 +59,7 @@ https://code.visualstudio.com/
 
 __GIT__
 
-Start this by cloning the git hub repository.  Assuming you have git installed, in linux, change to your home directory and run:
+Start by cloning the git hub repository.  Assuming you have git installed, change, in linux to your home directory and run:
 
         git clone https://github.com/dkeeshin/OLTP20_framework.git
 
@@ -67,7 +67,7 @@ You will end up with a OLTP20_framework and give you a local version of the scri
 
 __PostgreSQL__
 
-Next you'll need to create a local postgresql database and schema to store messages. In Linux, change to /OLTP20_framework/postgreSQL  directory and run:
+Next you'll need to create a local postgresql database and schema to store messages. Change to the /OLTP20_framework/postgreSQL directory and run:
 
 		$ sudo -u postgres psql -p 5432 
 
@@ -79,7 +79,7 @@ The above script creates a database called __oltp20_framework__ and connects to 
 
 		oltp20_framework=# \i 0002create_outgoing.sql
 
-This script contains a trigger on the __message.outgoing__ table. This trigger fires off a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) feature.
+This script creates the __message.outgoing__ table and adds trigger to it. On a message insert, this trigger fires off a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) feature.
 
 __GO__
 
@@ -89,7 +89,7 @@ Assuming you have GO installed, change to the OLTP20_framework directory and run
 
 This will make sure there is a path to the GO program files.
 
-Next you will need to edit postgreSQL password and if necessary port number in main.go in OLTP20_framework/message_client directory. You can use a text editor or Visual Studio code.  
+Next you will need to edit the postgreSQL password and if necessary port number in main.go in the OLTP20_framework/message_client directory. You can use a text editor or Visual Studio code.  
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/07_client_main_go.png)
 
@@ -99,7 +99,7 @@ Next run the local GO code that "listens" for the notifications from postgreSQL.
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/01_message_client.png)
 
-For a remote connection, create a new terminal window and run:
+For a simulated remote connection, create a new terminal window and run:
 
 		go run message_server/main.go
 
