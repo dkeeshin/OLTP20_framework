@@ -3,7 +3,7 @@ __2021-06-10__
 
 __DESCRIPTION__
 
-The following is a conceptual design and a preliminary proof of concept code demp. 
+The following is a conceptual design and a preliminary proof of concept code demo. 
 
 __CONCEPT__
 
