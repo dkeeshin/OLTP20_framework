@@ -59,13 +59,13 @@ https://code.visualstudio.com/
 
 __GIT__
 
-The easiset way to start is to clone the git hub repository.  Assuming you have git installed, in linux, change to your home directory and run:
+Start this by cloning the git hub repository.  Assuming you have git installed, in linux, change to your home directory and run:
 
-git clone https://github.com/dkeeshin/OLTP20_framework.git
+        git clone https://github.com/dkeeshin/OLTP20_framework.git
 
 You will end up with a OLTP20_framework and give you a local version of the scripts for running this demo.
 
-PostgreSQL
+__PostgreSQL__
 
 Next you'll need to create a local postgresql database and schema to store messages. In Linux, change to /OLTP20_framework/postgreSQL  directory and run:
 
@@ -85,7 +85,7 @@ __GO__
 
 Assuming you have GO installed, change to the OLTP20_framework directory and run this
 
-	export PATH=$PATH:/usr/local/go/bin
+        export PATH=$PATH:/usr/local/go/bin
 
 This will make sure there is a path to the GO program files.
 
@@ -95,7 +95,7 @@ Next you will need to edit postgreSQL password and if necessary port number in m
 
 Next run the local GO code that "listens" for the notifications from postgreSQL. Change to the OLTP20_framework directory and run:
 
-	go run message_client/main.go
+        go run message_client/main.go
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/01_message_client.png)
 
