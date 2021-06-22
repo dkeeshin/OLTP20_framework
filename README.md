@@ -79,7 +79,7 @@ The above script creates a database called __oltp20_framework__ and connects to 
 
 		oltp20_framework=# \i 0002create_outgoing.sql
 
-This script creates the __message.outgoing__ table and adds trigger to it. On a message insert, this trigger fires off a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) feature.
+This script creates the __message.outgoing__ table and adds a trigger called __message_notify_event__ to it. On a message insert to the table, this trigger fires off a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) feature.
 
 __GO__
 
