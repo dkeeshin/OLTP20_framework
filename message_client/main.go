@@ -65,7 +65,8 @@ func grpc_connect(message string) {
 }
 
 func main() {
-	// replace password_goes_here and if necessary port number
+
+	// replace password_goes_here, and if necessary port number - default is 5432
 	var conninfo string = "dbname=oltp20_framework host=localhost user=postgres port=5432 password=password_goes_here"
 	conn, err := pgx.Connect(context.Background(), conninfo)
 
