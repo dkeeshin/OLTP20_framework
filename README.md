@@ -51,42 +51,51 @@ https://golang.org/doc/install
 
 https://grpc.io/docs/languages/go/quickstart/
 
+https://github.com/git-guides/install-git
+
 https://code.visualstudio.com/
 
 **SET UP**
 
-Step one is to create a local postgresql database and schema to store messages. In Linux, 
+GIT
+
+The easiset way to start is to clone the git hub repository.  Assuming you have git installed, in linux, change to your home directory and run:
+
+git clone https://github.com/dkeeshin/OLTP20_framework.git
+
+You will end up with a OLTP20_framework and give you a local version of the scripts for running the proof of concept.
+
+PostgreSQL
+
+Next you'll need to create a local postgresql database and schema to store messages. In Linux, change to /OLTP20_framework/postgreSQL  directory and run:
 
 		$ sudo -u postgres psql -p 5432 
 
-From the postgres command line, run https://github.com/dkeeshin/OLTP20_framework/blob/main/postgreSQL/0001create_oltp20_framework.sql
+From the postgres command line, run
 
-		postgres=# \i /Documents\0001create_oltp20_framework.sql
+		postgres=# \i 0001create_oltp20_framework.sql
 
-The above script creates a database called __oltp20_framework__ and connects to it. 
-Next run  https://github.com/dkeeshin/OLTP20_framework/blob/main/postgreSQL/0002create_outgoing.sql using this command:
+The above script creates a database called __oltp20_framework__ and connects to it. Next run,
 
 		oltp20_framework=# \i 0002create_outgoing.sql
 
 This script contains a trigger on the __message.outgoing__ table. This trigger fires off a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) feature.
 
-Meanwhile, start the local GO code that "listens" for the notifications from postgreSQL. First, make sure [this GO code](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/main.go) is in place:
+GO
 
-		https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/main.go
+Assuming you have GO installed, change to the OLTP20_framework directory and run this
 
-*NOTE: GO can be finicky about where it runs from.  I modeled the GO code here on the "HelloWorld" examples in https://grpc.io/docs/languages/go/quickstart/, follow the instructions in the quickstart and you'll end up with a directory like*
+	export PATH=$PATH:/usr/local/go/bin
 
-		/grpc-go/examples/helloworld
+This will make sure there is a path to the GO program files.
 
-I would recommend creating a directory named *message_client* in helloworld and put the main.go above in it.  Similarily,  I would create a *message_server* directory [for this gRPC server GO code](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go).
+Next you will need to edit postgreSQL password and if necessary port number in main.go in OLTP20_framework/message_client directory  You can use a text editor or Visual Studio code.  
 
-		https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/main.go
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/07_client_main_go.png)
 
-*If there are issues,  be sure to check the linux path command.*
+Next run the local GO code that "listens" for the notifications from postgreSQL. Change to the OLTP20_framework directory and run:
 
-Once the GO code is in place start up the listener. Execute:
-
-		go run message_client/main.go
+	go run message_client/main.go
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/01_message_client.png)
 
