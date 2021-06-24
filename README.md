@@ -35,7 +35,7 @@ Anything that needs near real time high-performance, data management like tradin
 
 **CODE SAMPLE**
 
-The following is an example of using a database transaction as an asynchronous message. The message is sent over a gRPC connection to a remote database node or peer.
+The following is an example of using a database transaction as an asynchronous message. The message is sent over a gRPC connection to a destination database.
 
 **COMPONENTS**
 
