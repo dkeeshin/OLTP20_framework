@@ -45,7 +45,7 @@ For information and instruction on how to install these components, see:
 
 https://linuxmint.com/
 
-https://www.postgresql.org/
+[PostgreSQL Install Guide](https://github.com/M-Thirumal/installation_guide/blob/master/PostgreSQL/Install_PostgresQL_in_Ubuntu.md)
 
 https://golang.org/doc/install
 
