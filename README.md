@@ -45,7 +45,7 @@ For information and instruction on how to install these components, see:
 
 https://linuxmint.com/
 
-[Basic PostgreSQL Install Notes](https://github.com/dkeeshin/OLTP20_framework/blob/main/PostgreSQL_Install_Notes.md)
+[PostgreSQL Install Notes](https://github.com/dkeeshin/OLTP20_framework/blob/main/PostgreSQL_Install_Notes.md)
 
 https://golang.org/doc/install
 
