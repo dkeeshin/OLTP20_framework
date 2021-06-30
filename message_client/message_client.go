@@ -63,7 +63,7 @@ func grpc_connect(message string) {
 	}
 	log.Printf("Server Message Sent : %s", r.GetMessage())
 }
-
+//this is a test
 func main() {
 
 	// replace password_goes_here, and if necessary port number - default is 5432
