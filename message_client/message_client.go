@@ -63,12 +63,29 @@ func grpc_connect(message string) {
 	}
 	log.Printf("Server Message Sent : %s", r.GetMessage())
 }
-//this is a test
+
 func main() {
 
+	type Configuration struct {
+		oltp_db     string
+		db_user     string
+		db_host     string
+		db_port     string
+		db_password string
+	}
+
+	var g Configuration
+	g.oltp_db = os.Getenv("OLTP20DB")
+	g.db_user = os.Getenv("DBUSER")
+	g.db_host = os.Getenv("DBHOST")
+	g.db_port = os.Getenv("DBPORT") //no int hass to be string
+	g.db_password = os.Getenv("DBPASSWORD")
+
+	connection_string := fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
+
 	// replace password_goes_here, and if necessary port number - default is 5432
-	var conninfo string = "dbname=oltp20_framework host=localhost user=postgres port=5432 password=password_goes_here"
-	conn, err := pgx.Connect(context.Background(), conninfo)
+	//var conninfo string = "dbname=oltp20_framework host=localhost user=postgres port=5433 password=password_goes_here"
+	conn, err := pgx.Connect(context.Background(), connection_string)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
@@ -81,7 +98,7 @@ func main() {
 			fmt.Println(err.Error())
 		}
 	}
-	listener := pq.NewListener(conninfo, 0*time.Second, time.Minute, reportProblem)
+	listener := pq.NewListener(connection_string, 0*time.Second, time.Minute, reportProblem)
 	err = listener.Listen("events")
 	if err != nil {
 		panic(err)
