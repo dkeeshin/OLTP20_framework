@@ -82,9 +82,6 @@ func main() {
 	g.db_password = os.Getenv("DBPASSWORD")
 
 	connection_string := fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
-
-	// replace password_goes_here, and if necessary port number - default is 5432
-	//var conninfo string = "dbname=oltp20_framework host=localhost user=postgres port=5433 password=password_goes_here"
 	conn, err := pgx.Connect(context.Background(), connection_string)
 
 	if err != nil {
