@@ -66,7 +66,7 @@ func grpc_connect(message string) {
 
 func main() {
 
-	type Configuration struct {
+	type Environment struct {
 		oltp_db     string
 		db_user     string
 		db_host     string
@@ -74,7 +74,7 @@ func main() {
 		db_password string
 	}
 
-	var g Configuration
+	var g Environment
 	g.oltp_db = os.Getenv("OLTP20DB")
 	g.db_user = os.Getenv("DBUSER")
 	g.db_host = os.Getenv("DBHOST")

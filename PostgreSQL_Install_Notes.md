@@ -10,9 +10,9 @@ __Get your Linux versions' UBUNTU_CODENAME:__
 
 		cat /etc/os-release | grep UBUNTU_CODENAME
 
-__In my case codename is "bionic". Add or change the codename in the following command__
+__In my case codename is "bionic". Add or change the codename in the following command - make sure to leave a space in front of codename:__
 
-		sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/bionic-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
+		sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" >> /etc/apt/sources.list.d/pgdg.list'
 
 __Update and Install__
 

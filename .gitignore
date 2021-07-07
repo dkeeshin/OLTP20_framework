@@ -1,1 +1,2 @@
 /etc/environment
+/postgreSQL/0003load_test_data.sql
