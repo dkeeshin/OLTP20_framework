@@ -24,12 +24,10 @@ import (
 	"log"
 	"net"
 
+	"flag"
+
 	"google.golang.org/grpc"
 	pb "google.golang.org/grpc/examples/helloworld/helloworld"
-)
-
-const (
-	port = ":50051"
 )
 
 // server is used to implement helloworld.GreeterServer.
@@ -45,8 +43,14 @@ func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloRe
 }
 
 func main() {
-	println("Running...")
-	lis, err := net.Listen("tcp", port)
+
+	//get  port number from command line
+	wordPtr := flag.String("host", "localhost:50051", "default host to listen on")
+	flag.Parse()
+	host := *wordPtr
+	println("OLTP20 Message Server listening on host:" + host)
+
+	lis, err := net.Listen("tcp", host)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
