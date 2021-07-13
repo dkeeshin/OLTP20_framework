@@ -87,7 +87,7 @@ This script loads test data:
 
 Test data loads to the oltp20_control database.  To date schema looks like this:
 
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/oltp20_control%2C%20v37-2021-07-12.png)
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/oltp20_control_v38_20210712.png)
 
 0003load_test_data.sql script loads test locations and three peer group hosts for testing.  All three peer group IP/host addresses are stored in the oltp20_control database table called setup.hub_peer_group.  They are configured as "localhost:50052", "localhost:50053", and "localhost:50054"--localhost: 50051 is stored in setup.hub_profile.  Setup.hub_route is the join between hub_profile and hub_peer_group.
 
