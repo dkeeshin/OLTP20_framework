@@ -69,15 +69,15 @@ __PostgreSQL__
 
 Next you'll need to create a local postgresql database and schema to store messages. Change to the /OLTP20_framework/postgreSQL directory and run:
 
-	$ sudo -u postgres psql -p 5432 
+        $ sudo -u postgres psql -p 5432
 
 From the postgres command line, run
 
-	postgres=# \i 0001create_oltp20_database.sql
+        postgres=# \i 0001create_oltp20_database.sql
 
 The above script creates a database called __oltp20_framework__ and connects to it. Next run,
 
-	oltp20_control=# \i 0002create_control_table.sql
+        oltp20_control=# \i 0002create_control_table.sql
 
 This script creates the __message.outgoing__ table and adds a trigger called __message_notify_event__ to it. On a message insert to the table, this trigger fires off a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) feature.
 
