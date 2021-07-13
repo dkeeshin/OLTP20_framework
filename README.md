@@ -122,7 +122,7 @@ Next change back to OLTP20_framework/message_client directory and run the local 
         
         go run message_client.go
 
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_client/01_message_client.png)
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/message_client/01_message_client.png)
 
 For a simulated remote connection, create a new terminal window and run:
 
@@ -130,7 +130,7 @@ For a simulated remote connection, create a new terminal window and run:
 
 Repeat the above command for 50053 and 50054.
 
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/02_message_server.png)
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/message_server/02_message_server.png)
 
 **TESTING**
 
@@ -140,7 +140,7 @@ Create a third terminal window, start postgreSQL and execute this:
 
 You should now be able to see the inserted data, the data sent as a message from the client, and the message received by the servers:
 
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/04_message_sent.png)
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/message_server/04_message_sent.png)
 
 To be continued...
 
