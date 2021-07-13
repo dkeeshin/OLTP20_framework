@@ -128,7 +128,7 @@ For a simulated remote connection, create a new terminal window and run:
 
         go run message_server.go -host=localhost:50052
 
-Repeat the above command for 50052 and 50053.
+Repeat the above command for 50053 and 50054.
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/message_server/02_message_server.png)
 
