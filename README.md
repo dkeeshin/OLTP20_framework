@@ -1,5 +1,5 @@
 __OLTP 2.0 Framework__
-__2021-06-21__
+__2021-07-13__
 
 __DESCRIPTION__
 
@@ -109,7 +109,7 @@ Next you will need to edit the linux environmental variables that hold the postg
 
         /etc/environment
 
-        Using a text editor,  enter these values:
+Using a text editor,  enter these values:
 
         PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/local/go/bin"
         OLTP20DB="oltp20_control"
