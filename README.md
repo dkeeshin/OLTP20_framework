@@ -67,7 +67,7 @@ This will create a OLTP20_framework directory and a local version of the scripts
 
 __PostgreSQL__
 
-Next you'll need to create a local postgresql database and schema to store messages. Change to the /OLTP20_framework/postgreSQL directory and run:
+Next you'll need to create a local postgresql database and schemas to store messages. Change to the /OLTP20_framework/postgreSQL directory and run:
 
         $ sudo -u postgres psql -p 5432
 
@@ -85,7 +85,7 @@ This script loads test data:
 
         oltp20_control=# \i 0003load_test_data.sql
 
-Test data loads to the oltp20_control database.  To date schema looks like this:
+Test data loads to the oltp20_control database.  To date, schema looks like this:
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/oltp20_control_v38_20210712.png)
 
@@ -109,7 +109,7 @@ Next you will need to edit the linux environmental variables that hold the postg
 
         /etc/environment
 
-Using a text editor,  enter these values:
+Using a text editor,  enter these values, adjust as necessary:
 
         PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/usr/local/go/bin"
         OLTP20DB="oltp20_control"
