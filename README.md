@@ -89,7 +89,7 @@ Test data loads to the oltp20_control database.  To date, schema looks like this
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/oltp20_control_v38_20210712.png)
 
-0003load_test_data.sql script loads test locations and three peer group hosts for testing.  All three peer group IP/host addresses are stored in the __setup.hub_peer_group__ table.  Values are "localhost:50052", "localhost:50053", and "localhost:50054"--localhost: 50051 is stored in __setup.hub_profile__, __setup.hub_route__ is the join between hub_profile and hub_peer_group.
+**0003load_test_data.sql** script loads test locations and three peer group hosts for testing.  All three peer group IP/host addresses are stored in the __setup.hub_peer_group__ table.  Values are "localhost:50052", "localhost:50053", and "localhost:50054"--localhost: 50051 is stored in __setup.hub_profile__, __setup.hub_route__ is the join between hub_profile and hub_peer_group.
 
 Note: you would replace "localhost"  with an actual IP address if you want to test connections to remote peer group hosts like a Linux VM in Azure, etc.
 
@@ -134,7 +134,7 @@ Repeat the above command for 50053 and 50054.
 
 **TESTING**
 
-Create a third terminal window, start postgreSQL and execute this:
+Create a final terminal window, start postgreSQL and execute this:
 
         insert into message.outgoing (type, date, payload) values ('message_test', '2021-07-12', 'Aha!');
 
