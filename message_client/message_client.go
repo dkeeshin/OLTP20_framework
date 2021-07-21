@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -9,37 +10,29 @@ import (
 	"os"
 	"time"
 
-	oltp20 "github.com/dkeeshin/OLTP20_framework/proto"
 	"github.com/jackc/pgx/v4"
 	"github.com/lib/pq"
 	"google.golang.org/grpc"
+	pb "google.golang.org/grpc/examples/helloworld/helloworld"
 )
 
 type Data struct{ IP string } //structure for mapping table to slice
 var hub_peer_group []Data     //create a hub_peer_group slice
 var connection_string string
 
-type StageLocation struct {
-	name      string
-	latitude  string
-	longitude string
-	id        string
-} //structure for passing stage.location
-
 func waitForNotification(l *pq.Listener) {
 	for {
 		select {
 		case n := <-l.Notify:
 			fmt.Println("Received data from channel [", n.Channel, "] :")
-			var foo string
-			foo = n.Extra
 
-			if foo == "" {
-				fmt.Println("Nothing to process")
+			// Prepare notification payload
+			var foo bytes.Buffer
+			err := json.Indent(&foo, []byte(n.Extra), "", "\t")
+			if err != nil {
+				fmt.Println("Error processing JSON: ", err)
 				return
 			}
-
-			fmt.Println("In process: ", n.Extra)
 
 			fmt.Println("Shuffling hub_peer_group ips...")
 			//shuffle hub_peer_group ips
@@ -49,7 +42,7 @@ func waitForNotification(l *pq.Listener) {
 			//OLTP20 broadcast to hub_peer_group
 			for _, i := range hub_peer_group {
 				fmt.Println("Destination IP: ", i.IP)
-				grpc_message(foo, i.IP)
+				grpc_message(foo.String(), i.IP)
 			}
 
 			return
@@ -70,20 +63,16 @@ func grpc_message(message string, ip_address string) {
 	}
 	defer conn.Close()
 
-	c := oltp20.NewOLTP20ServiceClient(conn) //pb.NewGreeterClient(conn)
+	c := pb.NewGreeterClient(conn)
 	// Contact the server and print out its response.
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	var stagelocation StageLocation
-	json.Unmarshal([]byte(message), &stagelocation)
-
-	r, err := c.LocationNotification(ctx, &oltp20.StageLocation{stagelocation.name, stagelocation.latitude, []byte(stagelocation.longitude), stagelocation.id})
-	//.SayHello(ctx, &pb.HelloRequest{Name: message})
+	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: message})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
 	}
-	log.Printf("Server Message Sent : %s", r.Status) //Status from server
+	log.Printf("Server Message Sent : %s", r.GetMessage())
 }
 
 func ip_shuffle() {
