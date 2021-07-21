@@ -10,10 +10,10 @@ service OLTP20Service {
 }
 
 message StageLocation {
-    string name = 5;
-    string latitude = 6;
-    string longitude = 7;
-    string id = 8;
+    string name = 10;
+    string latitude = 20;
+    string longitude = 30;
+    string location_id = 40;
 
 }
 
