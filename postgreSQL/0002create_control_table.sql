@@ -249,28 +249,21 @@ ALTER TABLE reference.location
 CREATE OR REPLACE  FUNCTION notify_event2() RETURNS TRIGGER AS $$
      
 	 DECLARE 
-        j_data varchar;
-		j_notification varchar;
-       
+        j_data json;
+		      
     BEGIN
        
         IF (TG_OP = 'INSERT') THEN
-			j_data = NEW;
+			j_data = row_to_json(NEW);
 	    END IF;
         
 		PERFORM pg_notify('events',j_data::text );
-	    -- RAISE NOTICE 'NEW is currently %', j_notification;   --for TESTING
+	    --RAISE NOTICE 'NEW is currently %', j_data;   --for TESTING
         -- Result is ignored since this is an AFTER trigger
         RETURN NULL; 
     END;
     
 $$ LANGUAGE plpgsql; 
-
-DROP TRIGGER IF EXISTS stage_location_notify_event on stage.location CASCADE;
-
-CREATE TRIGGER stage_location_notify_event
-AFTER INSERT ON stage.location
-    FOR EACH ROW EXECUTE PROCEDURE notify_event2();
 
 
 COMMIT TRANSACTION;
