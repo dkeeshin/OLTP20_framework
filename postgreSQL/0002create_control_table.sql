@@ -232,6 +232,39 @@ CREATE TRIGGER message_notify_event
 AFTER INSERT ON message.outgoing    
     FOR EACH ROW EXECUTE PROCEDURE notify_event();
 
+CREATE TABLE stage.location
+(
+    location_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    name character varying(72) COLLATE pg_catalog."default" NOT NULL,
+    latitude character varying(16) COLLATE pg_catalog."default" NOT NULL,
+    longitude character varying(16) COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT pk_location PRIMARY KEY (location_id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE reference.location
+    OWNER to postgres;
+
+CREATE OR REPLACE  FUNCTION notify_event2() RETURNS TRIGGER AS $$
+     
+	 DECLARE 
+        j_data json;
+		      
+    BEGIN
+       
+        IF (TG_OP = 'INSERT') THEN
+			j_data = row_to_json(NEW);
+	    END IF;
+        
+		PERFORM pg_notify('events',j_data::text );
+	    --RAISE NOTICE 'NEW is currently %', j_data;   --for TESTING
+        -- Result is ignored since this is an AFTER trigger
+        RETURN NULL; 
+    END;
+    
+$$ LANGUAGE plpgsql; 
+
 
 COMMIT TRANSACTION;
 
