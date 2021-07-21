@@ -1,7 +1,7 @@
 
 syntax = "proto3";
 
-option go_package = "oltp20";
+option go_package = "proto/oltp20";
 
 package oltp20;
 
@@ -13,9 +13,11 @@ message StageLocation {
     string name = 1;
     string latitude = 2;
     string longitude = 3;
+    string id = 4;
 
 }
 
 message LocationStatus {
     string status = 1;
 }
+
