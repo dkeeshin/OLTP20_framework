@@ -1,0 +1,23 @@
+
+syntax = "proto3";
+
+option go_package = "proto/oltp20";
+
+package oltp20;
+
+service OLTP20Service {
+    rpc LocationNotification (StageLocation) returns (LocationStatus);
+}
+
+message StageLocation {
+    string name = 10;
+    string latitude = 20;
+    string longitude = 30;
+    string location_id = 40;
+
+}
+
+message LocationStatus {
+    string status = 1;
+}
+
