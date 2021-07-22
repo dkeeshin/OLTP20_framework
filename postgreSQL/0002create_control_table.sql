@@ -234,7 +234,7 @@ AFTER INSERT ON message.outgoing
 
 CREATE TABLE stage.location
 (
-    location_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+    location_id uuid NOT NULL ,
     name character varying(72) COLLATE pg_catalog."default" NOT NULL,
     latitude character varying(16) COLLATE pg_catalog."default" NOT NULL,
     longitude character varying(16) COLLATE pg_catalog."default" NOT NULL,
