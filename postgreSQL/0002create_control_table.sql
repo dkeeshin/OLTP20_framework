@@ -19,7 +19,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE stage.route_map
 (
  hub_ip       varchar(50) NULL,
- "id"           uuid NOT NULL DEFAULT uuid_generate_v4(),
+ "id"           bytea NOT NULL,
  member_ip    varchar(50) NULL,
  peer_group_ip varchar(50) NULL,
  CONSTRAINT PK_route_map PRIMARY KEY ( "id" )
@@ -30,7 +30,7 @@ CREATE TABLE stage.route_map
 
 CREATE TABLE reference.location
 (
- location_id uuid NOT NULL DEFAULT uuid_generate_v4(),
+ location_id bytea NOT NULL,
  name        varchar(72) NOT NULL,
  latitude    varchar(16) NOT NULL,
  longitude  varchar(16) NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE reference.location
 CREATE TABLE setup.hub_peer_group
 (
  peer_group_ip varchar(32) NOT NULL,
- location_id  uuid NOT NULL,
+ location_id  bytea NOT NULL,
  name         varchar(72) NOT NULL,
  hash_value   bytea NULL,
  create_date  date NOT NULL,
@@ -71,7 +71,7 @@ CREATE INDEX fkIdx_63 ON setup.hub_peer_group
 CREATE TABLE setup.member_profile
 (
  member_profile_ip varchar(32) NOT NULL,
- location_id       uuid NOT NULL,
+ location_id       bytea NOT NULL,
  name              varchar(72) NOT NULL,
  hash_value        bytea NULL,
  create_date       date NOT NULL,
@@ -97,7 +97,7 @@ CREATE INDEX fkIdx_89 ON setup.member_profile
 CREATE TABLE setup.hub_profile
 (
  hub_profile_ip varchar(32) NOT NULL,
- location_id    uuid NOT NULL,
+ location_id    bytea NOT NULL,
  name           varchar(64) NOT NULL,
  hash_value     bytea NULL,
  create_date    date NOT NULL,
@@ -122,7 +122,7 @@ CREATE INDEX fkIdx_83 ON setup.hub_profile
 
 CREATE TABLE setup.member_route
 (
- member_route_id   uuid NOT NULL DEFAULT uuid_generate_v4(),
+ member_route_id   bytea NOT NULL,
  member_profile_ip varchar(32) NOT NULL,
  hub_profile_ip    varchar(32) NOT NULL,
  CONSTRAINT PK_hub_peer_group_member PRIMARY KEY ( member_route_id ),
@@ -151,7 +151,7 @@ CREATE INDEX fkIdx_86 ON setup.member_route
 
 CREATE TABLE setup.hub_route
 (
- route_id       uuid NOT NULL DEFAULT uuid_generate_v4(),
+ route_id       bytea NOT NULL,
  hub_profile_ip varchar(32) NOT NULL,
  peer_group_ip   varchar(32) NOT NULL,
  CONSTRAINT PK_hub_peer_group PRIMARY KEY ( route_id ),
@@ -180,7 +180,7 @@ CREATE INDEX fkIdx_57 ON setup.hub_route
 
 CREATE TABLE setup.alternate_member_route
 (
- alternate_id      uuid NOT NULL DEFAULT uuid_generate_v4(),
+ alternate_id      bytea NOT NULL,
  peer_group_ip      varchar(32) NOT NULL,
  member_profile_ip varchar(32) NOT NULL,
  CONSTRAINT PK_alternate_member_route PRIMARY KEY ( alternate_id ),
@@ -198,7 +198,7 @@ CREATE INDEX fkIdx_98 ON setup.alternate_member_route
  member_profile_ip
 );
 
-CREATE TABLE IF NOT EXISTS  message.outgoing (id uuid NOT NULL DEFAULT uuid_generate_v4(),
+CREATE TABLE IF NOT EXISTS  message.outgoing (id bytea NOT NULL,
 							  type varchar(32),
 							  date date,
 							  payload varchar(64) );
@@ -234,7 +234,7 @@ AFTER INSERT ON message.outgoing
 
 CREATE TABLE stage.location
 (
-    location_id uuid NOT NULL ,
+    location_id bytea NOT NULL ,
     name character varying(72) COLLATE pg_catalog."default" NOT NULL,
     latitude character varying(16) COLLATE pg_catalog."default" NOT NULL,
     longitude character varying(16) COLLATE pg_catalog."default" NOT NULL,

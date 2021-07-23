@@ -20,10 +20,10 @@ var hub_peer_group []Data     //create a hub_peer_group slice
 var connection_string string
 
 type StageLocation struct {
+	LocationId []byte
 	Name       string
 	Latitude   string
 	Longitude  string
-	LocationId string
 } //structure for passing stage.location
 
 func waitForNotification(l *pq.Listener) {

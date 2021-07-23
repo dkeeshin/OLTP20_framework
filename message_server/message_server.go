@@ -43,7 +43,7 @@ func (s *server) LocationNotification(ctx context.Context, in *oltp20.StageLocat
 	log.Printf(in.Name, in.Latitude, in.Longitude, in.LocationId)
 	*/
 
-	return &oltp20.LocationStatus{Status: "received" + in.LocationId}, nil
+	return &oltp20.LocationStatus{Status: "received " + in.Name}, nil
 }
 
 var connection_string string
