@@ -28,6 +28,7 @@ import (
 	"os"
 
 	oltp20 "github.com/dkeeshin/OLTP20_framework/proto"
+	"github.com/jackc/pgx/v4"
 	"google.golang.org/grpc"
 )
 
@@ -35,20 +36,23 @@ type server struct {
 	oltp20.UnimplementedOLTP20ServiceServer
 }
 
+var data *oltp20.StageLocation //create a hub_peer_group slice
+var connection_string string
+
 func (s *server) LocationNotification(ctx context.Context, in *oltp20.StageLocation) (*oltp20.LocationStatus, error) {
 	log.Printf("Received: %v", in.GetName())
 
 	/* for testing
 	log.Printf("table insert function goes here")
-	log.Printf(in.Name, in.Latitude, in.Longitude, in.LocationId)
 	*/
+
+	log.Printf(string(in.LocationId), in.Name, in.Latitude, in.Longitude)
+	db_connect(in)
 
 	return &oltp20.LocationStatus{Status: "received " + in.Name}, nil
 }
 
-var connection_string string
-
-func db_connect() {
+func db_connect(d *oltp20.StageLocation) {
 
 	type Environment struct {
 		oltp_db     string
@@ -66,12 +70,23 @@ func db_connect() {
 	g.db_password = os.Getenv("DBPASSWORD")
 
 	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
-	/*conn, err := pgx.Connect(context.Background(), connection_string)
+	conn, err := pgx.Connect(context.Background(), connection_string)
+
+	//rows, _ := conn.Query(context.Background(), "SELECT ip from setup.uf_get_peer_group_ip();")
+	//db.Database.Exec("CALL mydatabase.mystoredprocedure($1, $2)", param1, param2)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		os.Exit(1)
-	}*/
+	}
+
+	if _, err := conn.Exec(context.Background(), "INSERT INTO reference.location VALUES($1, $2, $3, $4)", string(d.LocationId), d.Name, d.Latitude, d.Longitude); err != nil {
+		// Handling error, if occur
+		fmt.Println("Unable to insert due to: ", err)
+	}
+
+	//tried to do this
+	//conn.Exec(context.Background(), "CALL reference.up_add_location($1,$2,$3,$4);", d.LocationId, d.Name, d.Latitude, d.Longitude)
 
 	return
 }

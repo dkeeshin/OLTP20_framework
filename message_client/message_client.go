@@ -47,10 +47,14 @@ func waitForNotification(l *pq.Listener) {
 
 			fmt.Println("Broadcasting to peer ips...")
 			//OLTP20 broadcast to hub_peer_group
-			for _, i := range hub_peer_group {
+			/*for _, i := range hub_peer_group {
 				fmt.Println("Destination IP: ", i.IP)
 				grpc_message(foo, i.IP)
-			}
+			}*/
+
+			/*for testing	*/
+
+			grpc_message(foo, "localhost:50052")
 
 			return
 		case <-time.After(90 * time.Second):

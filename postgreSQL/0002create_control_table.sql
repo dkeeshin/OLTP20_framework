@@ -246,7 +246,7 @@ TABLESPACE pg_default;
 ALTER TABLE reference.location
     OWNER to postgres;
 
-CREATE OR REPLACE  FUNCTION notify_event2() RETURNS TRIGGER AS $$
+CREATE OR REPLACE  FUNCTION notify_event_02() RETURNS TRIGGER AS $$
      
 	 DECLARE 
         j_data json;
@@ -264,6 +264,43 @@ CREATE OR REPLACE  FUNCTION notify_event2() RETURNS TRIGGER AS $$
     END;
     
 $$ LANGUAGE plpgsql; 
+
+
+create or replace procedure reference.up_add_location(
+   p_location_id bytea,
+   p_name varchar, 
+   p_latitude varchar,
+   p_longitude varchar	
+)
+language plpgsql    
+as $$
+begin
+   
+	INSERT INTO reference.location (location_id, name, latitude, longitude) VALUES (p_location_id,
+	p_name, p_latitude,p_longitude);
+
+end;$$
+
+DROP TRIGGER stage_location_notify_event ON stage.location;
+
+CREATE TRIGGER stage_location_notify_event
+    AFTER INSERT
+    ON stage.location
+    FOR EACH ROW
+    EXECUTE FUNCTION public.notify_event_02();
+
+-- drop function setup.uf_get_peer_group_ip();
+create function setup.uf_get_peer_group_ip()
+returns table (ip varchar)
+language plpgsql
+as
+$$
+begin
+return query
+   select peer_group_ip 
+   from setup.hub_peer_group;
+end;
+$$;
 
 
 COMMIT TRANSACTION;
