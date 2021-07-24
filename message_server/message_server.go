@@ -46,7 +46,7 @@ func (s *server) LocationNotification(ctx context.Context, in *oltp20.StageLocat
 	log.Printf("table insert function goes here")
 	*/
 
-	log.Printf(string(in.LocationId), in.Name, in.Latitude, in.Longitude)
+	log.Printf(in.Name, in.Latitude, in.Longitude)
 	db_connect(in)
 
 	return &oltp20.LocationStatus{Status: "received " + in.Name}, nil
@@ -80,7 +80,15 @@ func db_connect(d *oltp20.StageLocation) {
 		os.Exit(1)
 	}
 
-	if _, err := conn.Exec(context.Background(), "INSERT INTO reference.location VALUES($1, $2, $3, $4)", string(d.LocationId), d.Name, d.Latitude, d.Longitude); err != nil {
+	/*if _, err := conn.Exec(context.Background(), "INSERT INTO reference.location (location_id, name, latitude, longitude) VALUES($1::bytea, $2, $3, $4)", d.LocationId, d.Name, d.Latitude, d.Longitude); err != nil {
+		// Handling error, if occur
+		fmt.Println("Unable to insert due to: ", err)
+	}
+	*/
+
+	//hex_string := hex.EncodeToString(d.LocationId)
+
+	if _, err := conn.Exec(context.Background(), "CALL reference.up_add_location_c($1, $2, $3)", d.Name, d.Latitude, d.Longitude); err != nil {
 		// Handling error, if occur
 		fmt.Println("Unable to insert due to: ", err)
 	}

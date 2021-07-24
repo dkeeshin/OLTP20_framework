@@ -19,7 +19,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE stage.route_map
 (
  hub_ip       varchar(50) NULL,
- "id"           bytea NOT NULL,
+ "id"           varchar(64) NOT NULL,
  member_ip    varchar(50) NULL,
  peer_group_ip varchar(50) NULL,
  CONSTRAINT PK_route_map PRIMARY KEY ( "id" )
@@ -30,7 +30,7 @@ CREATE TABLE stage.route_map
 
 CREATE TABLE reference.location
 (
- location_id bytea NOT NULL,
+ location_id varchar(64) NOT NULL,
  name        varchar(72) NOT NULL,
  latitude    varchar(16) NOT NULL,
  longitude  varchar(16) NOT NULL,
@@ -45,9 +45,9 @@ CREATE TABLE reference.location
 CREATE TABLE setup.hub_peer_group
 (
  peer_group_ip varchar(32) NOT NULL,
- location_id  bytea NOT NULL,
+ location_id  varchar(64) NOT NULL,
  name         varchar(72) NOT NULL,
- hash_value   bytea NULL,
+ hash_value   varchar(64) NULL,
  create_date  date NOT NULL,
  "source"       varchar(64) NOT NULL,
  CONSTRAINT PK_group_hub PRIMARY KEY ( peer_group_ip ),
@@ -71,9 +71,9 @@ CREATE INDEX fkIdx_63 ON setup.hub_peer_group
 CREATE TABLE setup.member_profile
 (
  member_profile_ip varchar(32) NOT NULL,
- location_id       bytea NOT NULL,
+ location_id       varchar(64) NOT NULL,
  name              varchar(72) NOT NULL,
- hash_value        bytea NULL,
+ hash_value        varchar(64) NULL,
  create_date       date NOT NULL,
  "source"            varchar(64) NOT NULL,
  CONSTRAINT PK_member_profile PRIMARY KEY ( member_profile_ip ),
@@ -97,9 +97,9 @@ CREATE INDEX fkIdx_89 ON setup.member_profile
 CREATE TABLE setup.hub_profile
 (
  hub_profile_ip varchar(32) NOT NULL,
- location_id    bytea NOT NULL,
+ location_id    varchar(64) NOT NULL,
  name           varchar(64) NOT NULL,
- hash_value     bytea NULL,
+ hash_value     varchar(64) NULL,
  create_date    date NOT NULL,
  "source"         varchar(72) NOT NULL,
  CONSTRAINT PK_profile PRIMARY KEY ( hub_profile_ip ),
@@ -122,7 +122,7 @@ CREATE INDEX fkIdx_83 ON setup.hub_profile
 
 CREATE TABLE setup.member_route
 (
- member_route_id   bytea NOT NULL,
+ member_route_id   varchar(64) NOT NULL,
  member_profile_ip varchar(32) NOT NULL,
  hub_profile_ip    varchar(32) NOT NULL,
  CONSTRAINT PK_hub_peer_group_member PRIMARY KEY ( member_route_id ),
@@ -151,7 +151,7 @@ CREATE INDEX fkIdx_86 ON setup.member_route
 
 CREATE TABLE setup.hub_route
 (
- route_id       bytea NOT NULL,
+ route_id       varchar(64) NOT NULL,
  hub_profile_ip varchar(32) NOT NULL,
  peer_group_ip   varchar(32) NOT NULL,
  CONSTRAINT PK_hub_peer_group PRIMARY KEY ( route_id ),
@@ -180,7 +180,7 @@ CREATE INDEX fkIdx_57 ON setup.hub_route
 
 CREATE TABLE setup.alternate_member_route
 (
- alternate_id      bytea NOT NULL,
+ alternate_id      varchar(64) NOT NULL,
  peer_group_ip      varchar(32) NOT NULL,
  member_profile_ip varchar(32) NOT NULL,
  CONSTRAINT PK_alternate_member_route PRIMARY KEY ( alternate_id ),
@@ -198,7 +198,7 @@ CREATE INDEX fkIdx_98 ON setup.alternate_member_route
  member_profile_ip
 );
 
-CREATE TABLE IF NOT EXISTS  message.outgoing (id bytea NOT NULL,
+CREATE TABLE IF NOT EXISTS  message.outgoing (id varchar(64) NOT NULL,
 							  type varchar(32),
 							  date date,
 							  payload varchar(64) );
@@ -234,7 +234,7 @@ AFTER INSERT ON message.outgoing
 
 CREATE TABLE stage.location
 (
-    location_id bytea NOT NULL ,
+    location_id varchar(64) NOT NULL ,
     name character varying(72) COLLATE pg_catalog."default" NOT NULL,
     latitude character varying(16) COLLATE pg_catalog."default" NOT NULL,
     longitude character varying(16) COLLATE pg_catalog."default" NOT NULL,
@@ -267,7 +267,7 @@ $$ LANGUAGE plpgsql;
 
 
 create or replace procedure reference.up_add_location(
-   p_location_id bytea,
+   p_location_id varchar(64),
    p_name varchar, 
    p_latitude varchar,
    p_longitude varchar	
@@ -281,13 +281,15 @@ begin
 
 end;$$
 
-DROP TRIGGER stage_location_notify_event ON stage.location;
+DROP TRIGGER IF EXISTS stage_location_notify_event ON stage.location CASCADE;
 
 CREATE TRIGGER stage_location_notify_event
     AFTER INSERT
     ON stage.location
     FOR EACH ROW
     EXECUTE FUNCTION public.notify_event_02();
+
+
 
 -- drop function setup.uf_get_peer_group_ip();
 create function setup.uf_get_peer_group_ip()
