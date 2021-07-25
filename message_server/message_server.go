@@ -42,10 +42,6 @@ var connection_string string
 func (s *server) LocationNotification(ctx context.Context, in *oltp20.StageLocation) (*oltp20.LocationStatus, error) {
 	log.Printf("Received: %v", in.GetName())
 
-	/* for testing
-	log.Printf("table insert function goes here")
-	*/
-
 	log.Printf(in.Locationid, in.Name, in.Latitude, in.Longitude)
 	db_connect(in)
 
@@ -72,30 +68,17 @@ func db_connect(d *oltp20.StageLocation) {
 	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
 	conn, err := pgx.Connect(context.Background(), connection_string)
 
-	//rows, _ := conn.Query(context.Background(), "SELECT ip from setup.uf_get_peer_group_ip();")
-	//db.Database.Exec("CALL mydatabase.mystoredprocedure($1, $2)", param1, param2)
-
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		os.Exit(1)
 	}
 
-	/*if _, err := conn.Exec(context.Background(), "INSERT INTO reference.location (location_id, name, latitude, longitude) VALUES($1::bytea, $2, $3, $4)", d.LocationId, d.Name, d.Latitude, d.Longitude); err != nil {
-		// Handling error, if occur
-		fmt.Println("Unable to insert due to: ", err)
-	}
-	*/
-
-	//hex_string := hex.EncodeToString(d.LocationId)
 	fmt.Println("locationid", d.Locationid)
 
 	if _, err := conn.Exec(context.Background(), "CALL reference.up_add_location($1, $2, $3, $4)", d.Locationid, d.Name, d.Latitude, d.Longitude); err != nil {
 		// Handling error, if occur
 		fmt.Println("Unable to insert due to: ", err)
 	}
-
-	//tried to do this
-	//conn.Exec(context.Background(), "CALL reference.up_add_location($1,$2,$3,$4);", d.LocationId, d.Name, d.Latitude, d.Longitude)
 
 	return
 }
