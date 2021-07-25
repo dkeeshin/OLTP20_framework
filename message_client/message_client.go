@@ -20,7 +20,7 @@ var hub_peer_group []Data     //create a hub_peer_group slice
 var connection_string string
 
 type StageLocation struct {
-	LocationId []byte
+	Locationid string
 	Name       string
 	Latitude   string
 	Longitude  string
@@ -82,7 +82,7 @@ func grpc_message(message string, ip_address string) {
 	var stagelocation StageLocation
 	json.Unmarshal([]byte(message), &stagelocation)
 
-	r, err := c.LocationNotification(ctx, &oltp20.StageLocation{Name: stagelocation.Name, Latitude: stagelocation.Latitude, Longitude: stagelocation.Longitude, LocationId: stagelocation.LocationId})
+	r, err := c.LocationNotification(ctx, &oltp20.StageLocation{Locationid: stagelocation.Locationid, Name: stagelocation.Name, Latitude: stagelocation.Latitude, Longitude: stagelocation.Longitude})
 	//.SayHello(ctx, &pb.HelloRequest{Name: message})
 	if err != nil {
 		log.Fatalf("could not greet: %v", err)
