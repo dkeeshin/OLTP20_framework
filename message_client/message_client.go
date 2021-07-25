@@ -74,18 +74,16 @@ func grpc_message(message string, ip_address string) {
 	}
 	defer conn.Close()
 
-	c := oltp20.NewOLTP20ServiceClient(conn) //pb.NewGreeterClient(conn)
-	// Contact the server and print out its response.
+	c := oltp20.NewOLTP20ServiceClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
 	var stagelocation StageLocation
 	json.Unmarshal([]byte(message), &stagelocation)
-
 	r, err := c.LocationNotification(ctx, &oltp20.StageLocation{Locationid: stagelocation.Locationid, Name: stagelocation.Name, Latitude: stagelocation.Latitude, Longitude: stagelocation.Longitude})
-	//.SayHello(ctx, &pb.HelloRequest{Name: message})
+
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not connect: %v", err)
 	}
 	log.Printf("Server Message Sent : %s", r.Status) //Status from server
 }

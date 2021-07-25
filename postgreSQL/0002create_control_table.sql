@@ -30,11 +30,11 @@ CREATE TABLE stage.route_map
 
 CREATE TABLE reference.location
 (
- location_id varchar(64) NOT NULL,
+ locationid varchar(64) NOT NULL,
  name        varchar(72) NOT NULL,
  latitude    varchar(16) NOT NULL,
  longitude  varchar(16) NOT NULL,
- CONSTRAINT PK_location PRIMARY KEY ( location_id )
+ CONSTRAINT PK_location PRIMARY KEY ( locationid )
 );
 
 
@@ -45,18 +45,18 @@ CREATE TABLE reference.location
 CREATE TABLE setup.hub_peer_group
 (
  peer_group_ip varchar(32) NOT NULL,
- location_id  varchar(64) NOT NULL,
+ locationid  varchar(64) NOT NULL,
  name         varchar(72) NOT NULL,
  hash_value   varchar(64) NULL,
  create_date  date NOT NULL,
  "source"       varchar(64) NOT NULL,
  CONSTRAINT PK_group_hub PRIMARY KEY ( peer_group_ip ),
- CONSTRAINT FK_62 FOREIGN KEY ( location_id ) REFERENCES reference.location ( location_id )
+ CONSTRAINT FK_62 FOREIGN KEY ( locationid ) REFERENCES reference.location ( locationid )
 );
 
 CREATE INDEX fkIdx_63 ON setup.hub_peer_group
 (
- location_id
+ locationid
 );
 
 
@@ -71,18 +71,18 @@ CREATE INDEX fkIdx_63 ON setup.hub_peer_group
 CREATE TABLE setup.member_profile
 (
  member_profile_ip varchar(32) NOT NULL,
- location_id       varchar(64) NOT NULL,
+ locationid       varchar(64) NOT NULL,
  name              varchar(72) NOT NULL,
  hash_value        varchar(64) NULL,
  create_date       date NOT NULL,
  "source"            varchar(64) NOT NULL,
  CONSTRAINT PK_member_profile PRIMARY KEY ( member_profile_ip ),
- CONSTRAINT FK_88 FOREIGN KEY ( location_id ) REFERENCES reference.location ( location_id )
+ CONSTRAINT FK_88 FOREIGN KEY ( locationid ) REFERENCES reference.location ( locationid )
 );
 
 CREATE INDEX fkIdx_89 ON setup.member_profile
 (
- location_id
+ locationid
 );
 
 
@@ -97,18 +97,18 @@ CREATE INDEX fkIdx_89 ON setup.member_profile
 CREATE TABLE setup.hub_profile
 (
  hub_profile_ip varchar(32) NOT NULL,
- location_id    varchar(64) NOT NULL,
+ locationid    varchar(64) NOT NULL,
  name           varchar(64) NOT NULL,
  hash_value     varchar(64) NULL,
  create_date    date NOT NULL,
  "source"         varchar(72) NOT NULL,
  CONSTRAINT PK_profile PRIMARY KEY ( hub_profile_ip ),
- CONSTRAINT FK_82 FOREIGN KEY ( location_id ) REFERENCES reference.location ( location_id )
+ CONSTRAINT FK_82 FOREIGN KEY ( locationid ) REFERENCES reference.location ( locationid )
 );
 
 CREATE INDEX fkIdx_83 ON setup.hub_profile
 (
- location_id
+ locationid
 );
 
 
@@ -234,11 +234,11 @@ AFTER INSERT ON message.outgoing
 
 CREATE TABLE stage.location
 (
-    location_id varchar(64) NOT NULL ,
+    locationid varchar(64) NOT NULL ,
     name character varying(72) COLLATE pg_catalog."default" NOT NULL,
     latitude character varying(16) COLLATE pg_catalog."default" NOT NULL,
     longitude character varying(16) COLLATE pg_catalog."default" NOT NULL,
-    CONSTRAINT pk_location PRIMARY KEY (location_id)
+    CONSTRAINT pk_location PRIMARY KEY (locationid)
 )
 
 TABLESPACE pg_default;
@@ -267,7 +267,7 @@ $$ LANGUAGE plpgsql;
 
 
 create or replace procedure reference.up_add_location(
-   p_location_id varchar(64),
+   p_locationid varchar(64),
    p_name varchar, 
    p_latitude varchar,
    p_longitude varchar	
@@ -276,7 +276,7 @@ language plpgsql
 as $$
 begin
    
-	INSERT INTO reference.location (location_id, name, latitude, longitude) VALUES (p_location_id,
+	INSERT INTO reference.location (locationid, name, latitude, longitude) VALUES (p_locationid,
 	p_name, p_latitude,p_longitude);
 
 end;$$

@@ -87,6 +87,7 @@ func db_connect(d *oltp20.StageLocation) {
 	*/
 
 	//hex_string := hex.EncodeToString(d.LocationId)
+	fmt.Println("locationid", d.Locationid)
 
 	if _, err := conn.Exec(context.Background(), "CALL reference.up_add_location($1, $2, $3, $4)", d.Locationid, d.Name, d.Latitude, d.Longitude); err != nil {
 		// Handling error, if occur
