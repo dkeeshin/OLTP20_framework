@@ -44,7 +44,7 @@ CREATE TABLE reference.location
 
 CREATE TABLE setup.hub_peer_group
 (
- peer_group_ip varchar(32) NOT NULL,
+ peer_group_ip varchar(24) NOT NULL,
  locationid varchar(64)  NOT NULL,
  name         varchar(72) NOT NULL,
  hash_value   varchar(64) NULL,
@@ -70,7 +70,7 @@ CREATE INDEX fkIdx_63 ON setup.hub_peer_group
 
 CREATE TABLE setup.member_profile
 (
- member_profile_ip varchar(32) NOT NULL,
+ member_profile_ip varchar(24) NOT NULL,
  locationid varchar(64)  NOT NULL,
  name              varchar(72) NOT NULL,
  hash_value        varchar(64) NULL,
@@ -96,7 +96,7 @@ CREATE INDEX fkIdx_89 ON setup.member_profile
 
 CREATE TABLE setup.hub_profile
 (
- hub_profile_ip varchar(32) NOT NULL,
+ hub_profile_ip varchar(24) NOT NULL,
 locationid varchar(64)  NOT NULL,
  name           varchar(64) NOT NULL,
  hash_value     varchar(64) NULL,
@@ -123,8 +123,8 @@ CREATE INDEX fkIdx_83 ON setup.hub_profile
 CREATE TABLE setup.member_route
 (
  member_route_id   varchar(64) NOT NULL,
- member_profile_ip varchar(32) NOT NULL,
- hub_profile_ip    varchar(32) NOT NULL,
+ member_profile_ip varchar(24) NOT NULL,
+ hub_profile_ip    varchar(24) NOT NULL,
  CONSTRAINT PK_hub_peer_group_member PRIMARY KEY ( member_route_id ),
  CONSTRAINT FK_76 FOREIGN KEY ( member_profile_ip ) REFERENCES setup.member_profile ( member_profile_ip ),
  CONSTRAINT FK_85 FOREIGN KEY ( hub_profile_ip ) REFERENCES setup.hub_profile ( hub_profile_ip )
@@ -152,8 +152,8 @@ CREATE INDEX fkIdx_86 ON setup.member_route
 CREATE TABLE setup.hub_route
 (
  route_id       varchar(64) NOT NULL,
- hub_profile_ip varchar(32) NOT NULL,
- peer_group_ip   varchar(32) NOT NULL,
+ hub_profile_ip varchar(24) NOT NULL,
+ peer_group_ip   varchar(24) NOT NULL,
  CONSTRAINT PK_hub_peer_group PRIMARY KEY ( route_id ),
  CONSTRAINT FK_47 FOREIGN KEY ( hub_profile_ip ) REFERENCES setup.hub_profile ( hub_profile_ip ),
  CONSTRAINT FK_56 FOREIGN KEY ( peer_group_ip ) REFERENCES setup.hub_peer_group ( peer_group_ip )
@@ -181,8 +181,8 @@ CREATE INDEX fkIdx_57 ON setup.hub_route
 CREATE TABLE setup.alternate_member_route
 (
  alternate_id      varchar(64) NOT NULL,
- peer_group_ip      varchar(32) NOT NULL,
- member_profile_ip varchar(32) NOT NULL,
+ peer_group_ip      varchar(24) NOT NULL,
+ member_profile_ip varchar(24) NOT NULL,
  CONSTRAINT PK_alternate_member_route PRIMARY KEY ( alternate_id ),
  CONSTRAINT FK_94 FOREIGN KEY ( peer_group_ip ) REFERENCES setup.hub_peer_group ( peer_group_ip ),
  CONSTRAINT FK_97 FOREIGN KEY ( member_profile_ip ) REFERENCES setup.member_profile ( member_profile_ip )
@@ -199,7 +199,7 @@ CREATE INDEX fkIdx_98 ON setup.alternate_member_route
 );
 
 CREATE TABLE IF NOT EXISTS  message.outgoing (id varchar(64) NOT NULL,
-							  type varchar(32),
+							  type varchar(24),
 							  date date,
 							  payload varchar(64) );
 							  

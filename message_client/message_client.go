@@ -17,7 +17,6 @@ import (
 
 type Data struct{ IP string } //structure for mapping table to slice
 var hub_peer_group []Data     //create a hub_peer_group slice
-var connection_string string
 
 //structure for passing stage.location
 type StageLocation struct {
@@ -86,7 +85,21 @@ func grpc_message(message string, ip_address string) {
 	if err != nil {
 		log.Fatalf("could not connect: %v", err)
 	}
+
 	log.Printf("Server Message Sent : %s", r.Status) //Status from server
+
+	connection_string := db_get_connection_string()
+	conn2, err := pgx.Connect(context.Background(), connection_string)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	if _, err := conn2.Exec(context.Background(), "CALL temp.up_add_location($1, $2, $3, $4)", stagelocation.Locationid, stagelocation.Name, stagelocation.Latitude, stagelocation.Longitude); err != nil {
+		// Handling error, if occur
+		fmt.Println("Unable to insert due to: ", err)
+	}
+
 }
 
 func ip_shuffle() {
@@ -98,27 +111,12 @@ func ip_shuffle() {
 		})
 		fmt.Println(hub_peer_group)
 	}
+
 	return
 }
 
-func db_connect() {
+func db_get_peer_group(connection_string string) {
 
-	type Environment struct {
-		oltp_db     string
-		db_user     string
-		db_host     string
-		db_port     string
-		db_password string
-	}
-
-	var g Environment //need to add the following variables to etc/environment file
-	g.oltp_db = os.Getenv("OLTP20DB")
-	g.db_user = os.Getenv("DBUSER")
-	g.db_host = os.Getenv("DBHOST")
-	g.db_port = os.Getenv("DBPORT") //has to be string
-	g.db_password = os.Getenv("DBPASSWORD")
-
-	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
 	conn, err := pgx.Connect(context.Background(), connection_string)
 
 	if err != nil {
@@ -142,9 +140,31 @@ func db_connect() {
 	return
 }
 
+func db_get_connection_string() string {
+	var connection_string string
+	type Environment struct {
+		oltp_db     string
+		db_user     string
+		db_host     string
+		db_port     string
+		db_password string
+	}
+
+	var g Environment //need to add the following variables to etc/environment file
+	g.oltp_db = os.Getenv("OLTP20DB")
+	g.db_user = os.Getenv("DBUSER")
+	g.db_host = os.Getenv("DBHOST")
+	g.db_port = os.Getenv("DBPORT") //has to be string
+	g.db_password = os.Getenv("DBPASSWORD")
+
+	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
+	return (connection_string)
+}
+
 func main() {
 
-	db_connect()
+	connection_string := db_get_connection_string()
+	db_get_peer_group(connection_string)
 
 	reportProblem := func(ev pq.ListenerEventType, err error) {
 		if err != nil {
