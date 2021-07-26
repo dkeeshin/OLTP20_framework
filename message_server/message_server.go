@@ -42,7 +42,7 @@ var connection_string string
 func (s *server) LocationNotification(ctx context.Context, in *oltp20.StageLocation) (*oltp20.LocationStatus, error) {
 	log.Printf("Received: %v", in.GetName())
 
-	log.Printf(in.Locationid, in.Name, in.Latitude, in.Longitude)
+	log.Printf(string(in.Locationid), in.Name, in.Latitude, in.Longitude)
 	db_connect(in)
 
 	return &oltp20.LocationStatus{Status: "received " + in.Name}, nil

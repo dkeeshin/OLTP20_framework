@@ -19,12 +19,13 @@ type Data struct{ IP string } //structure for mapping table to slice
 var hub_peer_group []Data     //create a hub_peer_group slice
 var connection_string string
 
+//structure for passing stage.location
 type StageLocation struct {
 	Locationid string
 	Name       string
 	Latitude   string
 	Longitude  string
-} //structure for passing stage.location
+}
 
 func waitForNotification(l *pq.Listener) {
 	for {

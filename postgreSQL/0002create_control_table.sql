@@ -45,7 +45,7 @@ CREATE TABLE reference.location
 CREATE TABLE setup.hub_peer_group
 (
  peer_group_ip varchar(32) NOT NULL,
- locationid  varchar(64) NOT NULL,
+ locationid varchar(64)  NOT NULL,
  name         varchar(72) NOT NULL,
  hash_value   varchar(64) NULL,
  create_date  date NOT NULL,
@@ -71,7 +71,7 @@ CREATE INDEX fkIdx_63 ON setup.hub_peer_group
 CREATE TABLE setup.member_profile
 (
  member_profile_ip varchar(32) NOT NULL,
- locationid       varchar(64) NOT NULL,
+ locationid varchar(64)  NOT NULL,
  name              varchar(72) NOT NULL,
  hash_value        varchar(64) NULL,
  create_date       date NOT NULL,
@@ -97,7 +97,7 @@ CREATE INDEX fkIdx_89 ON setup.member_profile
 CREATE TABLE setup.hub_profile
 (
  hub_profile_ip varchar(32) NOT NULL,
- locationid    varchar(64) NOT NULL,
+locationid varchar(64)  NOT NULL,
  name           varchar(64) NOT NULL,
  hash_value     varchar(64) NULL,
  create_date    date NOT NULL,
@@ -266,20 +266,7 @@ CREATE OR REPLACE  FUNCTION notify_event_02() RETURNS TRIGGER AS $$
 $$ LANGUAGE plpgsql; 
 
 
-create or replace procedure reference.up_add_location(
-   p_locationid varchar(64),
-   p_name varchar, 
-   p_latitude varchar,
-   p_longitude varchar	
-)
-language plpgsql    
-as $$
-begin
-   
-	INSERT INTO reference.location (locationid, name, latitude, longitude) VALUES (p_locationid,
-	p_name, p_latitude,p_longitude);
 
-end;$$
 
 DROP TRIGGER IF EXISTS stage_location_notify_event ON stage.location CASCADE;
 
@@ -303,6 +290,23 @@ return query
    from setup.hub_peer_group;
 end;
 $$;
+
+--notice syntax
+CREATE PROCEDURE reference.up_add_location(
+   p_locationid varchar,
+   p_name varchar, 
+   p_latitude varchar,
+   p_longitude varchar	
+)
+AS $$
+BEGIN
+   
+	INSERT INTO reference.location (locationid, name, latitude, longitude) VALUES (p_locationid,
+	p_name, p_latitude,p_longitude);
+
+END;
+$$
+LANGUAGE plpgsql ;
 
 
 COMMIT TRANSACTION;
