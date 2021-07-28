@@ -42,19 +42,22 @@ func waitForNotification(l *pq.Listener) {
 			fmt.Println("In process: ", n.Extra)
 
 			fmt.Println("Testing mode, no shuffling or broadcast...")
-			/* fmt.Println("Shuffling hub_peer_group ips...")
+			fmt.Println("Shuffling hub_peer_group ips...")
 			//shuffle hub_peer_group ips
 			ip_shuffle()
 
 			fmt.Println("Broadcasting to peer ips...")
+			last_one := len(hub_peer_group)
+			commit_local := false
 			for _, i := range hub_peer_group {
 				fmt.Println("Destination IP: ", i.IP)
-				grpc_message(foo, i.IP)
-			}*/
-
+				if i == hub_peer_group[last_one] {
+					commit_local = true
+					grpc_message(foo, i.IP, commit_local)
+				}
+			}
 			/*for testing*/
-
-			grpc_message(foo, "localhost:50052")
+			//grpc_message(foo, "localhost:50052", true)
 
 			return
 		case <-time.After(90 * time.Second):
@@ -67,7 +70,7 @@ func waitForNotification(l *pq.Listener) {
 	}
 }
 
-func grpc_message(message string, ip_address string) {
+func grpc_message(message string, ip_address string, commit_local bool) {
 	conn, err := grpc.Dial(ip_address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
@@ -88,16 +91,18 @@ func grpc_message(message string, ip_address string) {
 
 	log.Printf("Server Message Sent : %s", r.Status) //Status from server
 
-	connection_string := db_get_connection_string()
-	conn2, err := pgx.Connect(context.Background(), connection_string)
+	if commit_local == true {
+		connection_string := db_get_connection_string()
+		conn2, err := pgx.Connect(context.Background(), connection_string)
 
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-		os.Exit(1)
-	}
-	if _, err := conn2.Exec(context.Background(), "CALL temp.up_add_location($1, $2, $3, $4)", stagelocation.Locationid, stagelocation.Name, stagelocation.Latitude, stagelocation.Longitude); err != nil {
-		// Handling error, if occur
-		fmt.Println("Unable to insert due to: ", err)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+			os.Exit(1)
+		}
+		if _, err := conn2.Exec(context.Background(), "CALL temp.up_add_location($1, $2, $3, $4)", stagelocation.Locationid, stagelocation.Name, stagelocation.Latitude, stagelocation.Longitude); err != nil {
+			// Handling error, if occur
+			fmt.Println("Unable to insert due to: ", err)
+		}
 	}
 
 }

@@ -47,6 +47,7 @@ CREATE TABLE setup.hub_peer_group
  peer_group_ip varchar(24) NOT NULL,
  locationid varchar(64)  NOT NULL,
  name         varchar(72) NOT NULL,
+ enable         boolean NOT NULL,
  hash_value   varchar(64) NULL,
  create_date  date NOT NULL,
  "source"       varchar(64) NOT NULL,
@@ -73,6 +74,7 @@ CREATE TABLE setup.member_profile
  member_profile_ip varchar(24) NOT NULL,
  locationid varchar(64)  NOT NULL,
  name              varchar(72) NOT NULL,
+ enable             boolean NOT NULL,
  hash_value        varchar(64) NULL,
  create_date       date NOT NULL,
  "source"            varchar(64) NOT NULL,
@@ -266,8 +268,6 @@ CREATE OR REPLACE  FUNCTION notify_event_02() RETURNS TRIGGER AS $$
 $$ LANGUAGE plpgsql; 
 
 
-
-
 DROP TRIGGER IF EXISTS stage_location_notify_event ON stage.location CASCADE;
 
 CREATE TRIGGER stage_location_notify_event
@@ -287,7 +287,7 @@ $$
 begin
 return query
    select peer_group_ip 
-   from setup.hub_peer_group;
+   from setup.hub_peer_group where enable = true;
 end;
 $$;
 
