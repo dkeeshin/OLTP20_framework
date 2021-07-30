@@ -10,6 +10,8 @@ CREATE SCHEMA message;
 CREATE SCHEMA setup;
 CREATE SCHEMA stage;
 CREATE SCHEMA reference;
+CREATE SCHEMA temp;
+
 
 \c postgres
 

@@ -29,7 +29,7 @@ Make it easy to understand, use, maintain, and customize.
 
 **USE CASES**
 
-Anything that needs near real time high-performance, data management like trading systems, B2B E-Commerce, payments, blockchains, data vaults, etc. 
+Anything that needs near real time high-performance, data management like trading systems, B2B E-Commerce, payments, hybrid-blockchains, data vaults, etc. 
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/OLTP20Preliminary20210614.png)
 
@@ -67,45 +67,9 @@ This will create a OLTP20_framework directory and a local version of the scripts
 
 __PostgreSQL__
 
-Next you'll need to create a local postgresql database and schemas to store messages. Change to the /OLTP20_framework/postgreSQL directory and run:
+Assuming PostgreSQL is installed. This demo is based on postgreSQL 13.
 
-        $ sudo -u postgres psql -p 5432
-
-From the postgres command line, run
-
-        postgres=# \i 0001create_oltp20_database.sql
-
-The above script creates a database called __oltp20_framework__ and connects to it. Next run,
-
-        oltp20_control=# \i 0002create_control_table.sql
-
-This script creates the __message.outgoing__ table and adds a trigger called __message_notify_event__ to it. On a message insert to the table, this trigger fires off a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) feature.
-
-This script loads test data:
-
-        oltp20_control=# \i 0003load_test_data.sql
-
-Test data loads to the oltp20_control database.  To date, schema looks like this:
-
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/oltp20_control_v38_20210712.png)
-
-**0003load_test_data.sql** script loads test locations and three peer group hosts for testing.  All three peer group IP/host addresses are stored in the __setup.hub_peer_group__ table.  Values are "localhost:50052", "localhost:50053", and "localhost:50054"--localhost: 50051 is stored in __setup.hub_profile__, __setup.hub_route__ is the join between hub_profile and hub_peer_group.
-
-Note: you would replace "localhost"  with an actual IP address if you want to test connections to remote peer group hosts like a Linux VM in Azure, etc.
-
-To exit out of postgreSQL and return to the linux command line prompt, type:
-
-        oltp20_control=# \q
-
-__GO__
-
-Assuming you have GO installed, change to the OLTP20_framework directory and run this
-      
-        export PATH=$PATH:/usr/local/go/bin
-
-This will make sure there is a path to the GO program files.
-
-Next you will need to edit the linux environmental variables that hold the postgreSQL connection string items.  As root, go to this file
+First we need to configure linux to run the oltp20_control database.  The best way to do this is to edit the linux environment variables that hold the postgreSQL connection string items.  As root, go to this file
 
         /etc/environment
 
@@ -118,13 +82,50 @@ Using a text editor,  enter these values, adjust as necessary:
         DBPORT="5432"
         DBPASSWORD="password_goes_here"
 
-Next change back to OLTP20_framework/message_client directory and run the local GO code that "listens" for the notifications from postgreSQL. Change to the OLTP20_framework directory and run:
+Next you'll need to create a database. Change to the /OLTP20_framework/postgreSQL directory and run:
+
+        $ sudo -u postgres psql -p 5432
+
+From the postgres command line, run
+
+        postgres=# \i 0001create_oltp20_database.sql
+
+The above script creates four databases all part of the oltp20 universe. For this demonstration we will use the oltp20_control database. Next run,
+
+        oltp20_control=# \i 0002create_control_table.sql
+
+
+This script creates the oltp20_control database tables, functions, triggers and procedure designed to date. The schema looks like this.
+
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/oltp20_control_ v46-2021-07-26.png
+
+Next, we need to load test data.  From Postgres run this:
+
+        oltp20_control=# \i 0003load_test_data.sql
+
+We will focus on the reference.location and stage.location tables.
+
+The stage_location contains a trigger called __stage_location_notify_event__ . When location data is inserted into stage.location the trigger sends a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) features.  This tells the listening notification GOLANG code to send the data via gRPC to a destination server.  
+
+To exit from postgreSQL:
+
+        oltp20_control-# \q
+
+cd ..__GO__
+
+Assuming you have GO installed, change to the OLTP20_framework directory and run this
+      
+        export PATH=$PATH:/usr/local/go/bin
+
+This will make sure there is a path to the GO program files.
+
+Next change to OLTP20_framework/message_client directory and run the local GO code that "listens" for the notifications from postgreSQL. Change to the OLTP20_framework/message_client directory and run:
         
         go run message_client.go
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/message_client/01_message_client.png)
 
-For a simulated remote connection, create a new terminal window and run:
+For a simulated remote connection, create a new terminal window change to message_server directory and run:
 
         go run message_server.go -host=localhost:50052
 
@@ -136,17 +137,9 @@ Repeat the above command for 50053 and 50054.
 
 Create a final terminal window, start postgreSQL and execute this:
 
-        insert into message.outgoing (type, date, payload) values ('message_test', '2021-07-12', 'Aha!');
+        INSERT INTO stage.location (locationid, name, latitude, longitude) SELECT encode((sha256(CAST(( '49.24966'|| '-123.11934') as bytea))), 'hex'),
+        'Vancouver BC CA', '49.24966','-123.11934';	
 
 You should now be able to see the inserted data, the data sent as a message from the client, and the message received by the servers:
-
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/message_server/04_message_sent.png)
-
-To be continued...
-
-
-
-
-
 
 

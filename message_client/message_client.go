@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -10,40 +9,58 @@ import (
 	"os"
 	"time"
 
+	oltp20 "github.com/dkeeshin/OLTP20_framework/proto"
 	"github.com/jackc/pgx/v4"
 	"github.com/lib/pq"
 	"google.golang.org/grpc"
-	pb "google.golang.org/grpc/examples/helloworld/helloworld"
 )
 
 type Data struct{ IP string } //structure for mapping table to slice
 var hub_peer_group []Data     //create a hub_peer_group slice
-var connection_string string
+
+//structure for passing stage.location
+type StageLocation struct {
+	Locationid string
+	Name       string
+	Latitude   string
+	Longitude  string
+}
 
 func waitForNotification(l *pq.Listener) {
 	for {
 		select {
 		case n := <-l.Notify:
 			fmt.Println("Received data from channel [", n.Channel, "] :")
+			var foo string
+			foo = n.Extra
 
-			// Prepare notification payload
-			var foo bytes.Buffer
-			err := json.Indent(&foo, []byte(n.Extra), "", "\t")
-			if err != nil {
-				fmt.Println("Error processing JSON: ", err)
+			if foo == "" {
+				fmt.Println("Nothing to process")
 				return
 			}
 
+			fmt.Println("In process: ", n.Extra)
+
+			fmt.Println("Testing mode, no shuffling or broadcast...")
 			fmt.Println("Shuffling hub_peer_group ips...")
 			//shuffle hub_peer_group ips
 			ip_shuffle()
 
 			fmt.Println("Broadcasting to peer ips...")
-			//OLTP20 broadcast to hub_peer_group
-			for _, i := range hub_peer_group {
-				fmt.Println("Destination IP: ", i.IP)
-				grpc_message(foo.String(), i.IP)
+			last_one := len(hub_peer_group)
+			commit_local := false
+			for count, i := range hub_peer_group {
+				fmt.Println("Destination IP: ", i.IP, count)
+				if count < last_one {
+					grpc_message(foo, i.IP, commit_local)
+				} else { //commit last one locally
+					commit_local = true
+					grpc_message(foo, i.IP, commit_local)
+				}
 			}
+
+			//for testing
+			//grpc_message(foo, "localhost:50052", false)
 
 			return
 		case <-time.After(90 * time.Second):
@@ -56,23 +73,41 @@ func waitForNotification(l *pq.Listener) {
 	}
 }
 
-func grpc_message(message string, ip_address string) {
+func grpc_message(message string, ip_address string, commit_local bool) {
 	conn, err := grpc.Dial(ip_address, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
 	defer conn.Close()
 
-	c := pb.NewGreeterClient(conn)
-	// Contact the server and print out its response.
+	c := oltp20.NewOLTP20ServiceClient(conn)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 
-	r, err := c.SayHello(ctx, &pb.HelloRequest{Name: message})
+	var stagelocation StageLocation
+	json.Unmarshal([]byte(message), &stagelocation)
+	r, err := c.LocationNotification(ctx, &oltp20.StageLocation{Locationid: stagelocation.Locationid, Name: stagelocation.Name, Latitude: stagelocation.Latitude, Longitude: stagelocation.Longitude})
+
 	if err != nil {
-		log.Fatalf("could not greet: %v", err)
+		log.Fatalf("could not connect: %v", err)
 	}
-	log.Printf("Server Message Sent : %s", r.GetMessage())
+
+	log.Printf("Server Message Sent : %s", r.Status) //Status from server
+
+	if commit_local == true {
+		connection_string := db_get_connection_string()
+		conn2, err := pgx.Connect(context.Background(), connection_string)
+
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+			os.Exit(1)
+		}
+		if _, err := conn2.Exec(context.Background(), "CALL reference.up_add_location($1, $2, $3, $4)", stagelocation.Locationid, stagelocation.Name, stagelocation.Latitude, stagelocation.Longitude); err != nil {
+			// Handling error, if occur
+			fmt.Println("Unable to insert due to: ", err)
+		}
+	}
+
 }
 
 func ip_shuffle() {
@@ -84,27 +119,12 @@ func ip_shuffle() {
 		})
 		fmt.Println(hub_peer_group)
 	}
+
 	return
 }
 
-func db_connect() {
+func db_get_peer_group(connection_string string) {
 
-	type Environment struct {
-		oltp_db     string
-		db_user     string
-		db_host     string
-		db_port     string
-		db_password string
-	}
-
-	var g Environment //need to add the following variables to etc/environment file
-	g.oltp_db = os.Getenv("OLTP20DB")
-	g.db_user = os.Getenv("DBUSER")
-	g.db_host = os.Getenv("DBHOST")
-	g.db_port = os.Getenv("DBPORT") //has to be string
-	g.db_password = os.Getenv("DBPASSWORD")
-
-	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
 	conn, err := pgx.Connect(context.Background(), connection_string)
 
 	if err != nil {
@@ -128,9 +148,31 @@ func db_connect() {
 	return
 }
 
+func db_get_connection_string() string {
+	var connection_string string
+	type Environment struct {
+		oltp_db     string
+		db_user     string
+		db_host     string
+		db_port     string
+		db_password string
+	}
+
+	var g Environment //need to add the following variables to etc/environment file
+	g.oltp_db = os.Getenv("OLTP20DB")
+	g.db_user = os.Getenv("DBUSER")
+	g.db_host = os.Getenv("DBHOST")
+	g.db_port = os.Getenv("DBPORT") //has to be string
+	g.db_password = os.Getenv("DBPASSWORD")
+
+	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s sslmode=disable ", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
+	return (connection_string)
+}
+
 func main() {
 
-	db_connect()
+	connection_string := db_get_connection_string()
+	db_get_peer_group(connection_string)
 
 	reportProblem := func(ev pq.ListenerEventType, err error) {
 		if err != nil {

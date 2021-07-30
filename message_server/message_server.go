@@ -21,31 +21,78 @@ package main
 
 import (
 	"context"
+	"flag"
+	"fmt"
 	"log"
 	"net"
+	"os"
 
-	"flag"
-
+	oltp20 "github.com/dkeeshin/OLTP20_framework/proto"
 	"google.golang.org/grpc"
-	pb "google.golang.org/grpc/examples/helloworld/helloworld"
 )
 
-// server is used to implement helloworld.GreeterServer.
 type server struct {
-	pb.UnimplementedGreeterServer
+	oltp20.UnimplementedOLTP20ServiceServer
 }
 
-// SayHello implements helloworld.GreeterServer
-func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) {
+var data *oltp20.StageLocation //create a hub_peer_group slice
+var connection_string string
 
+func (s *server) LocationNotification(ctx context.Context, in *oltp20.StageLocation) (*oltp20.LocationStatus, error) {
 	log.Printf("Received: %v", in.GetName())
-	return &pb.HelloReply{Message: " " + in.GetName()}, nil
+
+	log.Printf(string(in.Locationid), in.Name, in.Latitude, in.Longitude)
+	db_connect(in)
+
+	return &oltp20.LocationStatus{Status: "received " + in.Name}, nil
+}
+
+func db_connect(d *oltp20.StageLocation) {
+
+	type Environment struct {
+		oltp_db     string
+		db_user     string
+		db_host     string
+		db_port     string
+		db_password string
+	}
+
+	var g Environment //need to add the following variables to etc/environment file
+	g.oltp_db = os.Getenv("OLTP20DB")
+	g.db_user = os.Getenv("DBUSER")
+	g.db_host = os.Getenv("DBHOST")
+	g.db_port = os.Getenv("DBPORT") //has to be string
+	g.db_password = os.Getenv("DBPASSWORD")
+
+	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s sslmode=disable", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
+	/*uncomment for remote connection
+	conn, err := pgx.Connect(context.Background(), connection_string)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+		os.Exit(1)
+	}
+	*/
+
+	fmt.Println("locationid:", d.Locationid)
+	fmt.Println("Name:", d.Name)
+	fmt.Println("Latitude:", d.Latitude)
+	fmt.Println("Longitude:", d.Longitude)
+
+	/* uncomment for remote updates
+	if _, err := conn.Exec(context.Background(), "CALL reference.up_add_location($1, $2, $3, $4)", d.Locationid, d.Name, d.Latitude, d.Longitude); err != nil {
+		// Handling error, if occur
+		fmt.Println("Unable to insert due to: ", err)
+	}
+	*/
+
+	return
 }
 
 func main() {
 
 	//get  port number from command line
-	wordPtr := flag.String("host", "localhost:50051", "default host to listen on")
+	wordPtr := flag.String("host", "localhost:50052", "default host to listen on")
 	flag.Parse()
 	host := *wordPtr
 	println("OLTP20 Message Server listening on host:" + host)
@@ -55,7 +102,7 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterGreeterServer(s, &server{})
+	oltp20.RegisterOLTP20ServiceServer(s, &server{})
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
