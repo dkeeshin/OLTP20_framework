@@ -99,11 +99,19 @@ This script creates the oltp20_control database tables, functions, triggers and 
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/oltp20_control_ v46-2021-07-26.png
 
-We will focus on the reference.location and stage.location tables.  
+Next, we need to load test data.  From Postgres run this:
+
+        oltp20_control=# \i 0003load_test_data.sql
+
+We will focus on the reference.location and stage.location tables.
 
 The stage_location contains a trigger called __stage_location_notify_event__ . When location data is inserted into stage.location the trigger sends a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) features.  This tells the listening notification GOLANG code to send the data via gRPC to a destination server.  
 
-__GO__
+To exit from postgreSQL:
+
+        oltp20_control-# \q
+
+cd ..__GO__
 
 Assuming you have GO installed, change to the OLTP20_framework directory and run this
       
@@ -129,34 +137,9 @@ Repeat the above command for 50053 and 50054.
 
 Create a final terminal window, start postgreSQL and execute this:
 
-        insert into message.outgoing (type, date, payload) values ('message_test', '2021-07-12', 'Aha!');
+        INSERT INTO stage.location (locationid, name, latitude, longitude) SELECT encode((sha256(CAST(( '49.24966'|| '-123.11934') as bytea))), 'hex'),
+        'Vancouver BC CA', '49.24966','-123.11934';	
 
 You should now be able to see the inserted data, the data sent as a message from the client, and the message received by the servers:
 
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/message_server/04_message_sent.png)
-
-To be continued...
-
-
-
-
-
-
-
-This script loads test data:
-
-        oltp20_control=# \i 0003load_test_data.sql
-
-Test data loads to the oltp20_control database.  To date, schema looks like this:
-
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/oltp20_control_ v46-2021-07-26.png
-
-
-**0003load_test_data.sql** script loads test locations and three peer group hosts for testing.  All three peer group IP/host addresses are stored in the __setup.hub_peer_group__ table.  Values are "localhost:50052", "localhost:50053", and "localhost:50054"--localhost: 50051 is stored in __setup.hub_profile__, __setup.hub_route__ is the join between hub_profile and hub_peer_group.
-
-Note: you would replace "localhost"  with an actual IP address if you want to test connections to remote peer group hosts like a Linux VM in Azure, etc.
-
-To exit out of postgreSQL and return to the linux command line prompt, type:
-
-        oltp20_control=# \q
 

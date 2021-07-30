@@ -28,7 +28,6 @@ import (
 	"os"
 
 	oltp20 "github.com/dkeeshin/OLTP20_framework/proto"
-	"github.com/jackc/pgx/v4"
 	"google.golang.org/grpc"
 )
 
@@ -66,19 +65,26 @@ func db_connect(d *oltp20.StageLocation) {
 	g.db_password = os.Getenv("DBPASSWORD")
 
 	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s sslmode=disable", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
+	/*uncomment for remote connection
 	conn, err := pgx.Connect(context.Background(), connection_string)
 
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 		os.Exit(1)
 	}
+	*/
 
-	fmt.Println("locationid", d.Locationid)
+	fmt.Println("locationid:", d.Locationid)
+	fmt.Println("Name:", d.Name)
+	fmt.Println("Latitude:", d.Latitude)
+	fmt.Println("Longitude:", d.Longitude)
 
+	/* uncomment for remote updates
 	if _, err := conn.Exec(context.Background(), "CALL reference.up_add_location($1, $2, $3, $4)", d.Locationid, d.Name, d.Latitude, d.Longitude); err != nil {
 		// Handling error, if occur
 		fmt.Println("Unable to insert due to: ", err)
 	}
+	*/
 
 	return
 }
