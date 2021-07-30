@@ -111,8 +111,6 @@ To exit from postgreSQL:
 
         oltp20_control-# \q
 
-cd ..__GO__
-
 Assuming you have GO installed, change to the OLTP20_framework directory and run this
       
         export PATH=$PATH:/usr/local/go/bin
