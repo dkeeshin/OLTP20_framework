@@ -49,15 +49,18 @@ func waitForNotification(l *pq.Listener) {
 			fmt.Println("Broadcasting to peer ips...")
 			last_one := len(hub_peer_group)
 			commit_local := false
-			for _, i := range hub_peer_group {
-				fmt.Println("Destination IP: ", i.IP)
-				if i == hub_peer_group[last_one] {
+			for count, i := range hub_peer_group {
+				fmt.Println("Destination IP: ", i.IP, count)
+				if count < last_one {
+					grpc_message(foo, i.IP, commit_local)
+				} else { //commit last one locally
 					commit_local = true
 					grpc_message(foo, i.IP, commit_local)
 				}
 			}
-			/*for testing*/
-			//grpc_message(foo, "localhost:50052", true)
+
+			//for testing
+			//grpc_message(foo, "localhost:50052", false)
 
 			return
 		case <-time.After(90 * time.Second):
@@ -99,7 +102,7 @@ func grpc_message(message string, ip_address string, commit_local bool) {
 			fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
 			os.Exit(1)
 		}
-		if _, err := conn2.Exec(context.Background(), "CALL temp.up_add_location($1, $2, $3, $4)", stagelocation.Locationid, stagelocation.Name, stagelocation.Latitude, stagelocation.Longitude); err != nil {
+		if _, err := conn2.Exec(context.Background(), "CALL reference.up_add_location($1, $2, $3, $4)", stagelocation.Locationid, stagelocation.Name, stagelocation.Latitude, stagelocation.Longitude); err != nil {
 			// Handling error, if occur
 			fmt.Println("Unable to insert due to: ", err)
 		}
@@ -162,7 +165,7 @@ func db_get_connection_string() string {
 	g.db_port = os.Getenv("DBPORT") //has to be string
 	g.db_password = os.Getenv("DBPASSWORD")
 
-	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
+	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s sslmode=disable ", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
 	return (connection_string)
 }
 

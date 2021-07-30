@@ -65,7 +65,7 @@ func db_connect(d *oltp20.StageLocation) {
 	g.db_port = os.Getenv("DBPORT") //has to be string
 	g.db_password = os.Getenv("DBPASSWORD")
 
-	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
+	connection_string = fmt.Sprintf("dbname=%s host=%s user=%s port=%s password=%s sslmode=disable", g.oltp_db, g.db_host, g.db_user, g.db_port, g.db_password)
 	conn, err := pgx.Connect(context.Background(), connection_string)
 
 	if err != nil {
