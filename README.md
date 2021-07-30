@@ -94,7 +94,6 @@ The above script creates four databases all part of the oltp20 universe. For thi
 
         oltp20_control=# \i 0002create_control_table.sql
 
-
 This script creates the oltp20_control database tables, functions, triggers and procedure designed to date. The schema looks like this.
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/oltp20_control_v46-2021-07-26.png
