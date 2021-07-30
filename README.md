@@ -96,7 +96,7 @@ The above script creates four databases all part of the oltp20 universe. For thi
 
 This script creates the oltp20_control database tables, functions, triggers and procedure designed to date. The schema looks like this.
 
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/oltp20_control_v46-2021-07-26.png
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/development/oltp20_control_v46-2021-07-26.png)
 
 Next, we need to load test data.  From Postgres run this:
 
