@@ -40,8 +40,6 @@ func waitForNotification(l *pq.Listener) {
 			}
 
 			fmt.Println("In process: ", n.Extra)
-
-			fmt.Println("Testing mode, no shuffling or broadcast...")
 			fmt.Println("Shuffling hub_peer_group ips...")
 			//shuffle hub_peer_group ips
 			ip_shuffle()
