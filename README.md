@@ -90,8 +90,14 @@ From the postgres command line, run
 
         postgres=# \i 0001create_oltp20_database.sql
 
-The above script creates four databases all part of the oltp20 universe. For this demonstration we will use the oltp20_control database. Next run,
+The above script creates four databases all part of the oltp20 universe. For this demonstration we will use the oltp20_control database. 
 
+Next connect to the oltp20_control database,
+
+        postgres=# \c oltp20_control
+
+And run,
+        
         oltp20_control=# \i 0002create_control_table.sql
 
 
@@ -103,9 +109,9 @@ Next, we need to load test data.  From Postgres run this:
 
         oltp20_control=# \i 0003load_test_data.sql
 
-We will focus on the reference.location and stage.location tables.
+We will focus on the stage.location and reference.location tables.
 
-The stage_location contains a trigger called __stage_location_notify_event__ . When location data is inserted into stage.location the trigger sends a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) features.  This tells the listening notification GOLANG code to send the data via gRPC to a destination server.  
+The stage_location contains a trigger called __stage_location_notify_event__ . When location data is inserted into stage.location the trigger sends a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) features.  This tells the listening notification GO code to send the data via gRPC to a destination server.  
 
 To exit from postgreSQL:
 
