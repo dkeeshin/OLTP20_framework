@@ -92,16 +92,12 @@ From the postgres command line, run
 
 The above script creates four databases all part of the oltp20 universe. For this demonstration we will use the oltp20_control database. 
 
-Next connect to the oltp20_control database,
-
-        postgres=# \c oltp20_control
-
-And run,
+Next run,
         
-        oltp20_control=# \i 0002create_control_table.sql
+        postgres=# \i 0002create_control_table.sql
 
 
-This script creates the oltp20_control database tables, functions, triggers and procedure designed to date. The schema looks like this.
+This script changes to oltp20_control database and created tables, functions, triggers and procedure designed to date. The schema looks like this.
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/oltp20_control_%20v46-2021-07-26.png)
 
