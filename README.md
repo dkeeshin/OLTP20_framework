@@ -97,7 +97,7 @@ Next run,
         postgres=# \i 0002create_control_table.sql
 
 
-This script changes to oltp20_control database and created tables, functions, triggers and procedure designed to date. The schema looks like this.
+This script changes to the oltp20_control database and creates tables, functions, triggers and procedures designed to date. The schema looks like this.
 
 ![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/oltp20_control_%20v46-2021-07-26.png)
 
