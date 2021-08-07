@@ -57,7 +57,6 @@ func waitForNotification(l *pq.Listener) {
 					grpc_message(foo, i.IP, commit_local)
 				}
 			}
-
 			//for testing
 			//grpc_message(foo, "localhost:50052", false)
 
