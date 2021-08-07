@@ -20,8 +20,6 @@ Treat each database transaction as an asynchronous message.
 Achieve reasonable and eventual data consistency.
 
 Factor distances and speeds between peers into the design.  
-
-Use regional hubs to balance performance, security, and monitoring.
  
 Borrow from the blockchain, make tranasctions immutable, AKA 'inserts only'.
 
