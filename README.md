@@ -90,28 +90,27 @@ From the postgres command line, run
 
         postgres=# \i 0001create_oltp20_database.sql
 
-The above script creates four databases all part of the oltp20 universe. For this demonstration we will use the oltp20_control database. 
+The above script creates four databases all part of the oltp20 universe. For this demonstration we will use the oltp20_control database. Next run,
 
-Next run,
-        
-        postgres=# \i 0002create_control_table.sql
+        oltp20_control=# \i 0002create_control_table.sql
 
+This script creates the oltp20_control database tables, functions, triggers and procedure designed to date. The schema looks like this.
 
-This script changes to the oltp20_control database and creates tables, functions, triggers and procedures designed to date. The schema looks like this.
-
-![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/oltp20_control_%20v46-2021-07-26.png)
+![image](https://github.com/dkeeshin/OLTP20_framework/blob/main/oltp20_control_v48-2021-08-07.png)
 
 Next, we need to load test data.  From Postgres run this:
 
         oltp20_control=# \i 0003load_test_data.sql
 
-We will focus on the stage.location and reference.location tables.
+We will focus on the reference.location and stage.location tables.
 
-The stage_location contains a trigger called __stage_location_notify_event__ . When location data is inserted into stage.location the trigger sends a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) features.  This tells the listening notification GO code to send the data via gRPC to a destination server.  
+The stage_location contains a trigger called __stage_location_notify_event__ . When location data is inserted into stage.location the trigger sends a notification using postgreSQLs' [LISTEN](https://www.postgresql.org/docs/9.1/sql-listen.html) and [NOTIFY](https://www.postgresql.org/docs/9.1/sql-notify.html) features.  This tells the listening notification GOLANG code to send the data via gRPC to a destination server.  
 
 To exit from postgreSQL:
 
         oltp20_control-# \q
+
+cd ..__GO__
 
 Assuming you have GO installed, change to the OLTP20_framework directory and run this
       
