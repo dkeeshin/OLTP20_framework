@@ -40,6 +40,7 @@ func waitForNotification(l *pq.Listener) {
 			}
 
 			fmt.Println("In process: ", n.Extra)
+
 			fmt.Println("Shuffling hub_peer_group ips...")
 			//shuffle hub_peer_group ips
 			ip_shuffle()
@@ -56,7 +57,6 @@ func waitForNotification(l *pq.Listener) {
 					grpc_message(foo, i.IP, commit_local)
 				}
 			}
-
 			//for testing
 			//grpc_message(foo, "localhost:50052", false)
 
