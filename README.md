@@ -20,8 +20,6 @@ Treat each database transaction as an asynchronous message.
 Achieve reasonable and eventual data consistency.
 
 Factor distances and speeds between peers into the design.  
-
-Use regional hubs to balance performance, security, and monitoring.
  
 Borrow from the blockchain, make tranasctions immutable, AKA 'inserts only'.
 
@@ -110,7 +108,7 @@ To exit from postgreSQL:
 
         oltp20_control-# \q
 
-cd ..__GO__
+__GO__
 
 Assuming you have GO installed, change to the OLTP20_framework directory and run this
       
