@@ -28,6 +28,7 @@ import (
 	"os"
 
 	oltp20 "github.com/dkeeshin/OLTP20_framework/proto"
+	"github.com/jackc/pgx/v4"
 	"google.golang.org/grpc"
 )
 
@@ -73,7 +74,6 @@ func db_connect(d *oltp20.StageLocation) {
 		os.Exit(1)
 	}
 
-
 	fmt.Println("locationid:", d.Locationid)
 	fmt.Println("Name:", d.Name)
 	fmt.Println("Latitude:", d.Latitude)
@@ -84,7 +84,6 @@ func db_connect(d *oltp20.StageLocation) {
 		// Handling error, if occur
 		fmt.Println("Unable to insert due to: ", err)
 	}
-	
 
 	return
 }
