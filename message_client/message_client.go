@@ -50,7 +50,7 @@ func waitForNotification(l *pq.Listener) {
 			commit_local := false
 			for count, i := range hub_peer_group {
 				fmt.Println("Destination IP: ", i.IP, count)
-				if count < last_one {
+				if count < last_one-1 {
 					grpc_message(foo, i.IP, commit_local)
 				} else { //commit last one locally
 					commit_local = true
