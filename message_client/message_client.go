@@ -15,6 +15,8 @@ import (
 	"google.golang.org/grpc"
 )
 
+//20210825
+
 type Data struct{ IP string } //structure for mapping table to slice
 var hub_peer_group []Data     //create a hub_peer_group slice
 var slice_count int
