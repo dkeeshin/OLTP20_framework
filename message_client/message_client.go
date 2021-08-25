@@ -15,8 +15,13 @@ import (
 	"google.golang.org/grpc"
 )
 
+//20210825
+
 type Data struct{ IP string } //structure for mapping table to slice
 var hub_peer_group []Data     //create a hub_peer_group slice
+var slice_count int
+
+const shortDuration = 1 * time.Millisecond
 
 //structure for passing stage.location
 type StageLocation struct {
@@ -46,17 +51,8 @@ func waitForNotification(l *pq.Listener) {
 			ip_shuffle()
 
 			fmt.Println("Broadcasting to peer ips...")
-			last_one := len(hub_peer_group)
-			commit_local := false
-			for count, i := range hub_peer_group {
-				fmt.Println("Destination IP: ", i.IP, count)
-				if count < last_one-1 {
-					grpc_message(foo, i.IP, commit_local)
-				} else { //commit last one locally
-					commit_local = true
-					grpc_message(foo, i.IP, commit_local)
-				}
-			}
+			slice_count = len(hub_peer_group)
+			broadcast_grpc_message(foo, slice_count)
 			//for testing
 			//grpc_message(foo, "localhost:50052", false)
 
@@ -71,41 +67,54 @@ func waitForNotification(l *pq.Listener) {
 	}
 }
 
-func grpc_message(message string, ip_address string, commit_local bool) {
-	conn, err := grpc.Dial(ip_address, grpc.WithInsecure(), grpc.WithBlock())
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	defer conn.Close()
+func broadcast_grpc_message(message string, message_count int) {
 
-	c := oltp20.NewOLTP20ServiceClient(conn)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	defer cancel()
+	message_counter := 1
+	for _, i := range hub_peer_group {
 
-	var stagelocation StageLocation
-	json.Unmarshal([]byte(message), &stagelocation)
-	r, err := c.LocationNotification(ctx, &oltp20.StageLocation{Locationid: stagelocation.Locationid, Name: stagelocation.Name, Latitude: stagelocation.Latitude, Longitude: stagelocation.Longitude})
+		color_reset := "\033[0m"
+		red := "\033[31m"
 
-	if err != nil {
-		log.Fatalf("could not connect: %v", err)
-	}
+		conn, err := grpc.Dial(i.IP, grpc.WithInsecure())
+		if err != nil {
+			log.Printf("did not connect: %v", err)
+		}
 
-	log.Printf("Server Message Sent : %s", r.Status) //Status from server
+		defer conn.Close()
 
-	if commit_local == true {
-		connection_string := db_get_connection_string()
-		conn2, err := pgx.Connect(context.Background(), connection_string)
+		c := oltp20.NewOLTP20ServiceClient(conn)
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+		defer cancel()
+
+		var stagelocation StageLocation
+		json.Unmarshal([]byte(message), &stagelocation)
+		r, err := c.LocationNotification(ctx, &oltp20.StageLocation{Locationid: stagelocation.Locationid, Name: stagelocation.Name, Latitude: stagelocation.Latitude, Longitude: stagelocation.Longitude})
 
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
-			os.Exit(1)
-		}
-		if _, err := conn2.Exec(context.Background(), "CALL reference.up_add_location($1, $2, $3, $4)", stagelocation.Locationid, stagelocation.Name, stagelocation.Latitude, stagelocation.Longitude); err != nil {
-			// Handling error, if occur
-			fmt.Println("Unable to insert due to: ", err)
-		}
-	}
+			log.Printf(red+"oops--cannot connect--", err, color_reset)
 
+		} else {
+			fmt.Println("Destination IP: ", i.IP, message_counter)
+			log.Printf("Server Message Sent : %s", r.Status)
+		}
+		// last one
+		if message_counter == message_count {
+			connection_string := db_get_connection_string()
+			conn2, err := pgx.Connect(context.Background(), connection_string)
+
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+				os.Exit(1)
+			}
+			if _, err := conn2.Exec(context.Background(), "CALL reference.up_add_location($1, $2, $3, $4)", stagelocation.Locationid, stagelocation.Name, stagelocation.Latitude, stagelocation.Longitude); err != nil {
+				// Handling error, if occur
+				fmt.Println("Unable to insert due to: ", err)
+			}
+			return
+		}
+		message_counter++
+	}
+	return
 }
 
 func ip_shuffle() {
